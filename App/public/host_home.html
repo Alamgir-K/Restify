@@ -4,11 +4,57 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" href="src/css/style.css" />
+    <link rel="stylesheet" href="../src/css/style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Home</title>
   </head>
-  <body class="bg-beige h-screen overflow-auto">
+  <body>
+    <header class="bg-[#fbf8f0]">
+    <div class="container mx-auto p-4">
+      <nav class="flex justify-between items-center">
+        <div>
+            <a href="index.html">
+            <p class="text-xl md:text-2xl font-semibold">
+              Restify
+            </p>
+          </a>
+        </div>
+        <div class="flex justify-between">
+          <div class="mx-2 sm:mx-4">
+            <a href="index.html">
+              <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/log-out-svgrepo-com.svg">
+            </a>
+          </div>
+          <div class="mx-2 sm:mx-4">
+            <a href="search.html">
+              <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/search-svgrepo-com.svg">
+            </a>
+          </div>
+          <div class="mx-2 sm:mx-4">
+            <a href="reservations.html">
+              <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/suitcase-2-svgrepo-com.svg">
+            </a>
+          </div> 
+          <div class="mx-2 sm:mx-4">
+            <a href="host_home.html">
+              <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/price-tag-svgrepo-com.svg">
+            </a>
+          </div> 
+          <div class="mx-2 sm:mx-4">
+            <a href="notifications.html">
+                <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/bell-svgrepo-com.svg">
+            </a>
+          </div>
+          <div class="mx-2 sm:mx-4">
+            <a href="profile.html">
+              <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/user-svgrepo-com.svg">
+            </a>
+          </div> 
+        </div>
+      </nav>
+    </div>
+  </header>
+  <div class="bg-beige h-screen overflow-auto">
     <div class="flex flex-col h-screen">
       <div class="p-4 mt-4 flex flex-wrap container mx-auto">
           <div class="w-1/4 md:w-1/5 p-3">
@@ -47,7 +93,7 @@
             <button
                 class="absolute left-0 bottom-0 text-center text-green-500 hover:text-green-800 text-9xl plus"
               >
-                +
+              <a href="host_edit_property.html">+</a>
               </button>
           </div>
         </div>
@@ -105,5 +151,6 @@
           </div>
           <!-- Repeat the same code block for other reviews and requests -->
         </div>
-      </div>      
+      </div> 
+    </div>     
   </body>
