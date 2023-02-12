@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="src/css/style.css" />
+    <title>Edit Property</title>
+  </head>
+  <body class="bg-beige h-screen"> 
+    <div class="container mx-auto">
+      <h1 class="text-2xl font-medium mb-8">Edit Property</h1>
+      <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <div class="flex">
+          <div class="flex-col w-1/2 p-4">
+            <label
+              class="block text-gray-700 font-medium mb-2"
+              for="title"
+            >
+              Title
+            </label>
+            <input
+
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="title"
+              type="text"
+              placeholder="Title"
+            />
+          </div>
+          <div class="flex-col w-1/2 p-4">
+            <label
+              class="block text-gray-700 font-medium mb-2"
+              for="listed"
+            >
+              Listed
+            </label>
+            <label class="switch" id="listed">
+              <input type="checkbox" checked>
+              <span class="slider round"></span>
+            </label>   
+          </div>
+        </div>
+
+        <div class="flex overflow-x-auto">
+          <div class="w-64 h-64 mr-4 relative">
+            <img src="https://a0.muscache.com/im/pictures/miso/Hosting-34692739/original/3a75ba1b-e9cb-4b93-b6eb-b757bbcbfa1e.jpeg?im_w=1200" class="w-60 h-48 rounded"/>
+            <button
+              class="absolute top-0 left-0 text-red-500 hover:text-red-800 font-medium p-2"
+              style="z-index: 1;"
+            >
+              &times;
+            </button>
+          </div>
+          <div class="w-64 h-64 mr-4 relative">
+            <img src="https://a0.muscache.com/im/pictures/c596d286-57a6-460e-b6a8-9698b6f31157.jpg?im_w=720" class="w-60 h-48 rounded"/>
+            <button
+              class="absolute top-0 left-0 text-red-500 hover:text-red-800 font-medium p-2"
+              style="z-index: 1;"
+            >
+              &times;
+            </button>
+          </div>
+          <div class="w-64 h-64 mr-4 relative">
+            <img src="https://a0.muscache.com/im/pictures/6df63a59-7ad7-4a4a-b28d-9796b5b97b0a.jpg?im_w=720" class="w-60 h-48 rounded"/>
+            <button
+              class="absolute top-0 left-0 text-red-500 hover:text-red-800 font-medium p-2"
+              style="z-index: 1;"
+            >
+              &times;
+            </button>
+          </div>
+          <div class="w-64 h-64 mr-4">
+            <div class="relative">
+              <img src="https://via.placeholder.com/400x300" alt="House Image" />
+              <button
+                class="absolute bottom-0 left-0 text-green-500 hover:text-green-800 font-medium text-3xl p-2"
+                style="z-index: 1;"
+              >
+                +
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="flex">
+          <div class="w-3/6 flex-col p-4">
+            <label
+              class="block text-gray-700 font-medium mb-2"
+              for="location"
+            >
+              Address
+            </label>
+            <input
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="location"
+              type="text"
+              placeholder="Location"
+            />
+          </div>
+          <div class="w-1/4 flex-col p-4">
+            <label
+              class="block text-gray-700 font-medium mb-2"
+              for="guests-allowed"
+            >
+              Guests Allowed
+            </label>
+            <select
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="guests-allowed"
+            >
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10+">10+</option>
+            </select>
+          </div>
+          <div class="w-1/4 flex-col p-4">
+            <label
+              class="block text-gray-700 font-medium mb-2"
+              for="beds"
+            >
+              Beds
+            </label>
+            <select
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="beds"
+            >
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8+</option>
+            </select>
+          </div>
+          <div class="w-1/4 flex-col p-4">
+            <label
+              class="block text-gray-700 font-medium mb-2"
+              for="washrooms"
+            >
+              Washrooms
+            </label>
+            <select
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="washrooms"
+            >
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6+">6+</option>
+            </select>
+          </div>
+          <div class="mb-4 flex-col w-1/2 p-4">
+          </div>
+        </div>
+        <table class="table-auto w-full mb-4">
+          <thead>
+            <tr>
+              <th class="px-4 py-2">From</th>
+              <th class="px-4 py-2">To</th>
+              <th class="px-4 py-2">Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="border px-4 py-2">
+                <div class="flex">
+                  <select class="w-3/4 border p-1">
+                    <option value="January">January</option>
+                    <option value="February">February</option>
+                    <option value="March">March</option>
+                    <option value="April">April</option>
+                    <option value="May">May</option>
+                    <option value="June">June</option>
+                    <option value="July">July</option>
+                    <option value="August">August</option>
+                    <option value="September">September</option>
+                    <option value="October">October</option>
+                    <option value="November">November</option>
+                    <option value="December">December</option>
+                  </select>
+                  <select class="w-1/4 border p-1">
+                    <option value="1">1st</option>
+                    <option value="5">5th</option>
+                    <option value="10">10th</option>
+                    <option value="15">15th</option>
+                    <option value="20">20th</option>
+                    <option value="25">25th</option>
+                    <option value="30">30th</option>
+                  </select>
+                </div>
+              </td>
+              <td class="border px-4 py-2">
+                <div class="flex">
+                  <select class="w-3/4 border p-1">
+                    <option value="January">January</option>
+                    <option value="February">February</option>
+                    <option value="March">March</option>
+                    <option value="April">April</option>
+                    <option value="May">May</option>
+                    <option value="June">June</option>
+                    <option value="July">July</option>
+                    <option value="August">August</option>
+                    <option value="September">September</option>
+                    <option value="October">October</option>
+                    <option value="November">November</option>
+                    <option value="December">December</option>
+                  </select>
+                  <select class="w-1/4 border p-1">
+                    <option value="1">1st</option>
+                    <option value="5">5th</option>
+                    <option value="10">10th</option>
+                    <option value="15">15th</option>
+                    <option value="20">20th</option>
+                    <option value="25">25th</option>
+                    <option value="30">30th</option>
+                  </select>
+                </div>
+              </td>
+              <td class="border px-4 py-2">
+                <input class="w-full border p-1" type="text" value="">
+              </td>
+            </tr>
+            <tr>
+              <td class="border px-4 py-2">
+                <div class="flex">
+                  <select class="w-3/4 border p-1">
+                    <option value="January">January</option>
+                    <option value="February">February</option>
+                    <option value="March">March</option>
+                    <option value="April">April</option>
+                    <option value="May">May</option>
+                    <option value="June">June</option>
+                    <option value="July">July</option>
+                    <option value="August">August</option>
+                    <option value="September">September</option>
+                    <option value="October">October</option>
+                    <option value="November">November</option>
+                    <option value="December">December</option>
+                  </select>
+                  <select class="w-1/4 border p-1">
+                    <option value="1">1st</option>
+                    <option value="5">5th</option>
+                    <option value="10">10th</option>
+                    <option value="15">15th</option>
+                    <option value="20">20th</option>
+                    <option value="25">25th</option>
+                    <option value="30">30th</option>
+                  </select>
+                </div>
+              </td>
+              <td class="border px-4 py-2">
+                <div class="flex">
+                  <select class="w-3/4 border p-1">
+                    <option value="January">January</option>
+                    <option value="February">February</option>
+                    <option value="March">March</option>
+                    <option value="April">April</option>
+                    <option value="May">May</option>
+                    <option value="June">June</option>
+                    <option value="July">July</option>
+                    <option value="August">August</option>
+                    <option value="September">September</option>
+                    <option value="October">October</option>
+                    <option value="November">November</option>
+                    <option value="December">December</option>
+                  </select>
+                  <select class="w-1/4 border p-1">
+                    <option value="1">1st</option>
+                    <option value="5">5th</option>
+                    <option value="10">10th</option>
+                    <option value="15">15th</option>
+                    <option value="20">20th</option>
+                    <option value="25">25th</option>
+                    <option value="30">30th</option>
+                  </select>
+                </div>
+              </td>
+              <td class="border px-4 py-2">
+                <input class="w-full border p-1" type="text" value="">
+              </td>
+            </tr>
+            <tr>
+              <td class="border p-1"></td>
+              <td class="border p-1"></td>
+              <td class="border p-1">
+                <button
+                class="text-green-500 hover:text-green-800 font-medium text-3xl p-2"
+                style="z-index: 1;"
+              >
+                +
+              </button>
+              </td>
+            </tr>
+            <!-- add more rows as needed -->
+          </tbody>
+        </table>          
+        <div class="mb-4">
+          <label
+            class="block text-gray-700 font-medium mb-2"
+            for="description"
+          >
+            Description
+          </label>
+          <textarea
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="description"
+            rows="5"
+            placeholder="Description"
+          >
+          </textarea>
+        </div>
+        <div class="flex items-center justify-between">
+          <button
+            class="button-normal text-white font-medium py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="submit"
+          >
+            Save
+          </button>
+          <a
+            class="inline-block align-baseline font-medium text-sm text-blue-500 hover:text-blue-800"
+            href="host_property.html"
+          >
+            Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
+
