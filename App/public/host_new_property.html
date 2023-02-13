@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../src/css/style.css" />
+    <title>New Property</title>
+  </head>
+  <body>
+    <header class="bg-[#fbf8f0]">
+        <div class="container mx-auto p-4">
+          <nav class="flex justify-between items-center">
+            <div>
+                <a href="index.html">
+                <p class="text-xl md:text-2xl font-semibold">
+                  Restify
+                </p>
+              </a>
+            </div>
+            <div class="flex justify-between">
+              <div class="mx-2 sm:mx-4">
+                <a href="index.html">
+                  <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/log-out-svgrepo-com.svg">
+                </a>
+              </div>
+              <div class="mx-2 sm:mx-4">
+                <a href="search.html">
+                  <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/search-svgrepo-com.svg">
+                </a>
+              </div>
+              <div class="mx-2 sm:mx-4">
+                <a href="reservations.html">
+                  <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/suitcase-2-svgrepo-com.svg">
+                </a>
+              </div> 
+              <div class="mx-2 sm:mx-4">
+                <a href="host_home.html">
+                  <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/price-tag-svgrepo-com.svg">
+                </a>
+              </div> 
+              <div class="mx-2 sm:mx-4">
+                <a href="notifications.html">
+                    <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/bell-svgrepo-com.svg">
+                </a>
+              </div>
+              <div class="mx-2 sm:mx-4">
+                <a href="profile.html">
+                  <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/user-svgrepo-com.svg">
+                </a>
+              </div> 
+            </div>
+          </nav>
+        </div>
+      </header>
+    <div class="bg-beige h-screen">
+    <div class="container mx-auto">
+      <h1 class="font-semibold mb-6 text-3xl">New Property</h1>
+      <form class="bg-white shadow-md rounded px-6 pt-8">
+        <div class="flex">
+          <div class="flex-col  p-4 w-1/2">
+            <label
+              class="mb-2 text-gray-500 block "
+            >
+              Title
+            </label>
+            <input
+
+              class="w-full px-4 py-3 appearance-none border rounded text-gray-500"
+              type="text"
+            />
+          </div>
+          <div class="flex-col w-1/2 p-4">
+            <label
+              class="block text-gray-500 mb-2"
+            >
+              Listed
+            </label>
+            <label class="switch" id="listed">
+              <input type="checkbox" checked>
+              <span class="slider round"></span>
+            </label>   
+          </div>
+        </div>
+
+        <div class="flex">
+          <div class="w-64 h-64 mr-4">
+            <div class="relative">
+              <img src="https://via.placeholder.com/400x300" alt="House Image" />
+              <button
+                class="absolute bottom-0 left-0 text-green-500 hover:text-green-800 text-3xl p-2"
+              >
+                +
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="flex">
+          <div class="w-3/6 flex-col p-4">
+            <label
+              class="block text-gray-700 font-medium mb-2"
+            >
+              Address
+            </label>
+            <input
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+              type="text"
+            />
+          </div>
+          <div class="w-1/4 flex-col p-4">
+            <label
+              class="block text-gray-700 font-medium mb-2"
+            >
+              Guests Allowed
+            </label>
+            <select
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+            >
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10+">10+</option>
+            </select>
+          </div>
+          <div class="w-1/4 flex-col p-4">
+            <label
+              class="block text-gray-500 mb-2"
+            >
+              Beds
+            </label>
+            <select
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+            >
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8+</option>
+            </select>
+          </div>
+          <div class="w-1/4 flex-col p-4">
+            <label
+              class="block text-gray-700 font-medium mb-2"
+            >
+              Washrooms
+            </label>
+            <select
+              class="shadow appearance-none border rounded w-full  text-gray-500 py-2 px-3"
+            >
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+              <option>6+</option>
+            </select>
+          </div>
+          <div class="mb-4 flex-col w-1/2 p-4">
+          </div>
+        </div>
+        <table class="table-auto w-full mb-4">
+          <thead>
+            <tr>
+              <th class="px-3 py-2">From</th>
+              <th class="px-3 py-2">To</th>
+              <th class="px-3 py-2">Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="border px-3 py-2">
+                <div class="flex">
+                    <select class="p-1 w-3/4 border">
+                      <option>January</option>
+                      <option>February</option>
+                      <option>March</option>
+                      <option>April</option>
+                      <option>May</option>
+                      <option>June</option>
+                      <option>July</option>
+                      <option>August</option>
+                      <option>September</option>
+                      <option>October</option>
+                      <option>November</option>
+                      <option>December</option>
+                    </select>
+                    <select class="w-1/4 border p-1">
+                      <option>1st</option>
+                      <option>5th</option>
+                      <option>10th</option>
+                      <option>15th</option>
+                      <option>20th</option>
+                      <option>25th</option>
+                      <option>30th</option>
+                    </select>
+                  </div>
+              </td>
+              <td class="border px-4 py-2">
+                <div class="flex">
+                    <select class="p-1 w-3/4 border">
+                      <option>January</option>
+                      <option>February</option>
+                      <option>March</option>
+                      <option>April</option>
+                      <option>May</option>
+                      <option>June</option>
+                      <option>July</option>
+                      <option>August</option>
+                      <option>September</option>
+                      <option>October</option>
+                      <option>November</option>
+                      <option>December</option>
+                    </select>
+                    <select class="w-1/4 border p-1">
+                      <option>1st</option>
+                      <option>5th</option>
+                      <option>10th</option>
+                      <option>15th</option>
+                      <option>20th</option>
+                      <option>25th</option>
+                      <option>30th</option>
+                    </select>
+                  </div>
+              </td>
+              <td class="border px-4 py-2">
+                <input class="w-full border p-1" type="text" value="">
+              </td>
+            </tr>
+            <tr>
+              <td class="border px-4 py-2">
+                <div class="flex">
+                    <select class="p-1 w-3/4 border">
+                      <option>January</option>
+                      <option>February</option>
+                      <option>March</option>
+                      <option>April</option>
+                      <option>May</option>
+                      <option>June</option>
+                      <option>July</option>
+                      <option>August</option>
+                      <option>September</option>
+                      <option>October</option>
+                      <option>November</option>
+                      <option>December</option>
+                    </select>
+                    <select class="w-1/4 border p-1">
+                      <option>1st</option>
+                      <option>5th</option>
+                      <option>10th</option>
+                      <option>15th</option>
+                      <option>20th</option>
+                      <option>25th</option>
+                      <option>30th</option>
+                    </select>
+                  </div>
+              </td>
+              <td class="border px-4 py-2">
+                <div class="flex">
+                    <select class="p-1 w-3/4 border">
+                      <option>January</option>
+                      <option>February</option>
+                      <option>March</option>
+                      <option>April</option>
+                      <option>May</option>
+                      <option>June</option>
+                      <option>July</option>
+                      <option>August</option>
+                      <option>September</option>
+                      <option>October</option>
+                      <option>November</option>
+                      <option>December</option>
+                    </select>
+                    <select class="w-1/4 border p-1">
+                      <option>1st</option>
+                      <option>5th</option>
+                      <option>10th</option>
+                      <option>15th</option>
+                      <option>20th</option>
+                      <option>25th</option>
+                      <option>30th</option>
+                    </select>
+                  </div>
+              </td>
+              <td class="border py-2 px-3">
+                <input class="p-1 w-full border" type="text" value="">
+              </td>
+            </tr>
+            <tr>
+              <td class="border p-1"></td>
+              <td class="border p-1"></td>
+              <td class="border p-1">
+                <button
+                class="text-green-500 hover:text-green-800 text-3xl p-2"
+              >
+                +
+              </button>
+              </td>
+            </tr>
+            <!-- add more rows as needed -->
+          </tbody>
+        </table>          
+        <div class="mb-4">
+          <label
+            class="block text-gray-500 mb-2"
+          >
+            Description
+          </label>
+          <textarea
+            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-500"
+            rows="5"
+            placeholder="Description"
+          >
+          </textarea>
+        </div>
+        <div class="flex items-center justify-between">
+          <button
+            class="text-white font-medium button-normal py-2 px-4 rounded"
+            type="submit"
+          >
+            Save
+          </button>
+          <a
+            class=" text-blue-500 text-sm hover:text-blue-800"
+            href="host_property.html"
+          >
+            Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+    </div>
+  </body>
+</html>
+

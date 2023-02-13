@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../src/css/style.css" />
+    <title>Property</title>
+  </head>
+  <body>
+    <header class="bg-[#fbf8f0]">
+        <div class="container mx-auto p-4">
+          <nav class="flex justify-between items-center">
+            <div>
+                <a href="index.html">
+                <p class="text-xl md:text-2xl font-semibold">
+                  Restify
+                </p>
+              </a>
+            </div>
+            <div class="flex justify-between">
+              <div class="mx-2 sm:mx-4">
+                <a href="index.html">
+                  <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/log-out-svgrepo-com.svg">
+                </a>
+              </div>
+              <div class="mx-2 sm:mx-4">
+                <a href="search.html">
+                  <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/search-svgrepo-com.svg">
+                </a>
+              </div>
+              <div class="mx-2 sm:mx-4">
+                <a href="reservations.html">
+                  <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/suitcase-2-svgrepo-com.svg">
+                </a>
+              </div> 
+              <div class="mx-2 sm:mx-4">
+                <a href="host_home.html">
+                  <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/price-tag-svgrepo-com.svg">
+                </a>
+              </div> 
+              <div class="mx-2 sm:mx-4">
+                <a href="notifications.html">
+                    <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/bell-svgrepo-com.svg">
+                </a>
+              </div>
+              <div class="mx-2 sm:mx-4">
+                <a href="profile.html">
+                  <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/user-svgrepo-com.svg">
+                </a>
+              </div> 
+            </div>
+          </nav>
+        </div>
+      </header>
+    <div class="bg-beige h-screen">
+    <div class="flex flex-col w-full p-6 container mx-auto">
+        <!-- Property Details Section -->
+        <div class="flex flex-col mb-4">
+          <h2 class="font-semibold mb-4 text-3xl">Property Details</h2>
+          <div class="flex mb-4">
+            <div class="relative">
+              <img src="https://a0.muscache.com/im/pictures/miso/Hosting-34692739/original/3a75ba1b-e9cb-4b93-b6eb-b757bbcbfa1e.jpeg?im_w=1200" alt="House Image" class="w-100 h-80 mr-4 rounded" />
+              <button
+              class="absolute top-4 right-8 rounded-full py-1 px-2 text-xs button-normal text-white"
+              >
+              <a href="host_edit_property.html">edit</a>
+            </button>
+              <p class="text-xl font-bold">Toronto Home</p>
+            </div>
+            <div class="word-list">
+              <div class="word rounded-lg max-w-sm button-normal">123 Main Street</div>
+              <div class="word button-normal rounded-lg max-w-sm ">Cost: $23</div>
+              <div class="word button-normal rounded-lg max-w-sm">2 Beds, 3 Baths</div>
+            </div>
+          </div>
+        </div>
+      
+        <!-- Upcoming Bookings Section -->
+        <div class="flex bg-white container">
+            <div class="flex flex-col mb-6 w-1/2 p-4">
+                <h2 class="text-2xl font-medium mb-4">Upcoming Bookings</h2>
+                <table class="w-full text-left table-auto">
+                  <thead>
+                    <tr>
+                      <th class="px-3 py-2">User</th>
+                      <th class="px-3 py-2">Guests</th>
+                      <th class="px-3 py-2">Dates</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="px-3 py-2 border">Harvey Milk</td>
+                      <td class="px-3 py-2 border">4</td>
+                      <td class="px-3 py-2 border">01/01/2023 - 01/05/2023
+                        <button class="bg-blue-500 px-2 py-3 text-white rounded-full">Approve</button>
+                        <button class="bg-red-500 px-2 py-3 text-white rounded-full">Deny</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="border px-3 py-2">Harry Kane</td>
+                      <td class="border px-3 py-2">5</td>
+                      <td class="border px-3 py-2">01/15/2023 - 01/20/2023
+                        <button class="bg-blue-500 px-2 py-3 text-white rounded-full">Approve</button>
+                        <button class="bg-red-500 px-2 py-3 text-white rounded-full">Deny</button>
+                      </td>
+                    </tr>
+                    <tr class="bg-blue-200">
+                      <td class="border px-3 py-2">Marmalade</td>
+                      <td class="border px-3 py-2">5</td>
+                      <td class="border px-3 py-2">13/34/2023 - 14/20/2023
+                        <button class="button-normal px-2 py-3 text-white rounded-full">Cancel</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            
+              <!-- Previous Guest Comments Section -->
+              <div class="flex flex-col w-1/2 relative pb-20 p-10">
+                <h2 class="text-2xl font-medium mb-4">Previous Guest Comments</h2>
+                <div class="mb-2 bg-gray-200 p-2 rounded ">
+                  <p class="font-medium mb-2">John Doe:</p>
+                  <div class="absolute right-10">
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                  </div>
+                  <p class="font-medium mb-2">Loved staying here! Everything was great. <button class="button-normal text-white rounded-full py-2 px-4">Reply</button></p>
+                </div>
+                <div class="p-4 mt-4 bg-gray-200 rounded">
+                  <p class="font-medium mb-2">Jane Doe:</p>
+                  <div class="absolute right-10">
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star checked"></span>
+                    <span class="fa fa-star"></span>
+                    <span class="fa fa-star"></span>
+                  </div>
+                  <p class="font-medium mb-2">The place was clean and the host was very friendly.</p>
+                </div>
+                <div class="w-2/3 light-theme rounded p-4">
+                  <p class="font-medium mb-2">Host: Huh, why only 3 stars??</p>
+                </div>
+              </div>
+        </div>
+      </div>
+    </div>
+  </body>
+          
