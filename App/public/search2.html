@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSC309 - P1</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="./output.css" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/e93986aed6.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="bg-[#fbf8f0]">
+        <div class="container mx-auto p-4">
+          <nav class="flex justify-between items-center">
+            <div>
+                <a href="index.html">
+                <p class="text-xl md:text-2xl font-semibold">
+                  Restify
+                </p>
+              </a>
+            </div>
+            <div class="flex justify-between">
+              <div class="mx-2 sm:mx-4">
+                <a href="index.html">
+                  <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/log-out-svgrepo-com.svg">
+                </a>
+              </div>
+              <div class="mx-2 sm:mx-4">
+                <a href="search.html">
+                  <img class="h-7 w-7 overflow-hidden rounded-full ring-2 ring-[#f1996f]" src="./images/search-svgrepo-com.svg">
+                </a>
+              </div>
+              <div class="mx-2 sm:mx-4">
+                <a href="reservations.html">
+                  <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/suitcase-2-svgrepo-com.svg">
+                </a>
+              </div> 
+              <div class="mx-2 sm:mx-4">
+                <a href="host_home.html">
+                  <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/price-tag-svgrepo-com.svg">
+                </a>
+              </div> 
+              <div class="mx-2 sm:mx-4">
+                <a href="notifications.html">
+                    <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/bell-svgrepo-com.svg">
+                </a>
+              </div>
+              <div class="mx-2 sm:mx-4">
+                <a href="profile.html">
+                  <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/user-svgrepo-com.svg">
+                </a>
+              </div> 
+            </div>
+          </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="home-container">
+            <div class="left-col">
+                <h1>Recommended for you</h1>
+                <div class="listings">
+                    <div class="pics">
+                        <img src="images/p10.jpg">
+                    </div>
+                    <div class="info">
+                        <p>Modern Cabin</p>
+                        <h3> Cabin with great view</h3>
+                        <p>6 Bedroom / 4 Bathrooms / Wifi</p>
+                        <i class="fa-solid fa-star"> 4.9 (2145)</i>
+                        <div class="price">
+                            <p>8 guests</p>
+                            <h4> $213 / night</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="listings">
+                    <div class="pics">
+                        <img src="images/p7.jpg">
+                    </div>
+                    <div class="info">
+                        <p>Small hut in Norway</p>
+                        <h3> Gorgeous hut for camping in the woods</h3>
+                        <p>1 Bedroom / Half-bath / Mountain-view / Wifi</p>
+                        <i class="fa-solid fa-star"> 4.2 (23)</i>
+                        <div class="price">
+                            <p>2 guests</p>
+                            <h4> $240 / night</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="listings">
+                    <div class="pics">
+                        <img src="images/p8.jpg">
+                    </div>
+                    <div class="info">
+                        <p>Multi-story house</p>
+                        <h3> Big house for big parties</h3>
+                        <p>8 Bedroom / 5 Bathrooms / Wifi</p>
+                        <i class="fa-solid fa-star"> 4.6 (223)</i>
+                        <div class="price">
+                            <p>12 guests</p>
+                            <h4> $320 / night</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="listings">
+                    <div class="pics">
+                        <img src="images/p9.jpg">
+                    </div>
+                    <div class="info">
+                        <p>Single house by the water</p>
+                        <h3> Fjord & mountains glamping house</h3>
+                        <p>2 Bedrooms / 1 Bathroom / Mountain-view / Wifi</p>
+                        <i class="fa-solid fa-star"> 4.7 (173)</i>
+                        <div class="price">
+                            <p>2 guests</p>
+                            <h4> $400 / night</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="right-col">
+                <div class="filters">
+                    <h2>Select Filters</h2>
+                    <h3>Housing Type</h3>
+                    <div class="filter">
+                        <input type="checkbox"> <p>House (4)</p>
+                    </div>
+
+                    <div class="filter">
+                        <input type="checkbox"> <p>Apartment (1)</p>
+                    </div>
+
+                    <div class="filter">
+                        <input type="checkbox"> <p>Treehouse (0)</p>
+                    </div>
+
+                    <div class="filter">
+                        <input type="checkbox"> <p>Castle (0)</p>
+                    </div>
+
+                    <div class="filter">
+                        <input type="checkbox"> <p>Cabins (4)</p>
+                    </div>
+
+                    <h3>Amenities</h3>
+                    <div class="filter">
+                        <input type="checkbox"> <p>Pool (0)</p>
+                    </div>
+
+                    <div class="filter">
+                        <input type="checkbox"> <p>Balcony (0)</p>
+                    </div>
+
+                    <div class="filter">
+                        <input type="checkbox" checked> <p>Wifi (9)</p>
+                    </div>
+
+                    <div class="filter">
+                        <input type="checkbox"> <p>Guest Suite (0)</p>
+                    </div>
+
+                    <div class="filter">
+                        <input type="checkbox"> <p>Parking (0)</p>
+                    </div>
+
+                    <div class="filter">
+                        <input type="checkbox"> <p>Gym (0)</p>
+                    </div>
+                   
+                    <div class="filter">
+                        <input type="checkbox"> <p>Kitchen (0)</p>
+                    </div>
+
+                    <div class="filter">
+                        <input type="checkbox"> <p>Heater (0)</p>
+                    </div>
+                </div>
+
+                <div class="orders">
+                    <h2>Select Order</h2>
+                    <h3>By Price</h3>
+                    <div class="filter">
+                        <input type="checkbox" checked> <p>from low to high</p>
+                    </div>
+
+                    <div class="filter">
+                        <input type="checkbox"> <p>from high to low</p>
+                    </div>
+
+                    <h3>By Ratings</h3>
+                    <div class="filter">
+                        <input type="checkbox"> <p>from low to high</p>
+                    </div>
+
+                    <div class="filter">
+                        <input type="checkbox"> <p>from high to low</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="pages">
+        <span><a href="search.html">1</a></span>
+        <span class="curr-page">2</span>
+    </div>
+
+    <div class="footer">
+        <p>Copyright @2023 CSC309</p>
+    </div>
+    
+
+</body>
+</html>
