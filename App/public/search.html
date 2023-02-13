@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSC309 - P1</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://kit.fontawesome.com/e93986aed6.js" crossorigin="anonymous"></script>
+  <link href="./output.css" rel="stylesheet">
+</head>
+<body>
+    <header class="bg-[#fbf8f0]">
+        <div class="container mx-auto p-4">
+          <nav class="flex justify-between items-center">
+            <div>
+                <a href="index.html">
+                <p class="text-xl md:text-2xl font-semibold">
+                  Restify
+                </p>
+              </a>
+            </div>
+            <div class="flex justify-between">
+              <div class="mx-2 sm:mx-4">
+                <a href="index.html">
+                  <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/log-out-svgrepo-com.svg">
+                </a>
+              </div>
+              <div class="mx-2 sm:mx-4">
+                <a href="search.html">
+                  <img class="h-7 w-7 overflow-hidden rounded-full ring-2 ring-[#f1996f]" src="./images/search-svgrepo-com.svg">
+                </a>
+              </div>
+              <div class="mx-2 sm:mx-4">
+                <a href="reservations.html">
+                  <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/suitcase-2-svgrepo-com.svg">
+                </a>
+              </div> 
+              <div class="mx-2 sm:mx-4">
+                <a href="host_home.html">
+                  <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/price-tag-svgrepo-com.svg">
+                </a>
+              </div> 
+              <div class="mx-2 sm:mx-4">
+                <a href="notifications.html">
+                    <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/bell-svgrepo-com.svg">
+                </a>
+              </div>
+              <div class="mx-2 sm:mx-4">
+                <a href="profile.html">
+                  <img class="h-7 w-7 overflow-hidden rounded-full" src="./images/user-svgrepo-com.svg">
+                </a>
+              </div> 
+            </div>
+          </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="home-container">
+            <div class="left-col">
+                <h1>Recommended for you</h1>
+                <div class="listings">
+                    <div class="pics">
+                        <a href="property.html"><img src="images/property 1/p1-1.jpeg"></a>
+                    </div>
+                    <div class="info">
+                        <p>Treehouse in Norway</p>
+                        <h3> Fjord & mountains glamping birdbox</h3>
+                        <p>1 Bedroom / Half-bath / Mountain-view / Wifi</p>
+                        <i class="fa-solid fa-star"> 4.8 (223)</i>
+                        <div class="price">
+                            <p>2 guests</p>
+                            <h4> $121 / night</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="listings">
+                    <div class="pics">
+                        <img src="images/p3.jpg">
+                    </div>
+                    <div class="info">
+                        <p>Great seaside house</p>
+                        <h3>Little house in Bodo</h3>
+                        <p>2 Bedrooms / 1 Bathroom / Wifi</p>
+                        <i class="fa-solid fa-star"> 4.2 (213)</i>
+                        <div class="price">
+                            <p>2 guests</p>
+                            <h4> $133 / night</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="listings">
+                    <div class="pics">
+                        <img src="images/p4.jpg">
+                    </div>
+                    <div class="info">
+                        <p>Forest view house</p>
+                        <h3> House in the woods</h3>
+                        <p>3 Bedrooms / 2 bathroom / Forest-view / Wifi</p>
+                        <i class="fa-solid fa-star"> 4.9 (1239)</i>
+                        <div class="price">
+                            <p>3 guests</p>
+                            <h4> $186 / night</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="listings">
+                    <div class="pics">
+                        <img src="images/p2.jpg">
+                    </div>
+                    <div class="info">
+                        <p>Seaview house</p>
+                        <h3> Beuatiful house by the seashore</h3>
+                        <p>1 Bedroom / 1 Bathroom / Sea-view / Wifi</p>
+                        <i class="fa-solid fa-star"> 4.3 (111)</i>
+                        <div class="price">
+                            <p>2 guests</p>
+                            <h4> $199 / night</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="listings">
+                    <div class="pics">
+                        <img src="images/p5.jpeg">
+                    </div>
+                    <div class="info">
+                        <p>Modern house in city center</p>
+                        <h3> New apartment in downtown</h3>
+                        <p>4 Bedroom / 2 Bathroom / City-Center / Wifi</p>
+                        <i class="fa-solid fa-star"> 3.9 (190)</i>
+                        <div class="price">
+                            <p>6 guests</p>
+                            <h4> $209 / night</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="right-col">
+                <div class="filters">
+                    <h2>Select Filters</h2>
+                    <h3>Housing Type</h3>
+                    <div class="filter">
+                        <input type="checkbox"> <p>House (4)</p>
+                    </div>
+
+                    <div class="filter">
+                        <input type="checkbox"> <p>Apartment (1)</p>
+                    </div>
+
+                    <div class="filter">
+                        <input type="checkbox"> <p>Treehouse (0)</p>
+                    </div>
+
+                    <div class="filter">
+                        <input type="checkbox"> <p>Castle (0)</p>
+                    </div>
+
+                    <div class="filter">
+                        <input type="checkbox"> <p>Cabins (4)</p>
+                    </div>
+
+                    <h3>Amenities</h3>
+                    <div class="filter">
+                        <input type="checkbox"> <p>Pool (0)</p>
+                    </div>
+
+                    <div class="filter">
+                        <input type="checkbox"> <p>Balcony (0)</p>
+                    </div>
+
+                    <div class="filter">
+                        <input type="checkbox" checked> <p>Wifi (9)</p>
+                    </div>
+
+                    <div class="filter">
+                        <input type="checkbox"> <p>Guest Suite (0)</p>
+                    </div>
+
+                    <div class="filter">
+                        <input type="checkbox"> <p>Parking (0)</p>
+                    </div>
+
+                    <div class="filter">
+                        <input type="checkbox"> <p>Gym (0)</p>
+                    </div>
+                   
+                    <div class="filter">
+                        <input type="checkbox"> <p>Kitchen (0)</p>
+                    </div>
+
+                    <div class="filter">
+                        <input type="checkbox"> <p>Heater (0)</p>
+                    </div>
+                </div>
+
+                <div class="orders">
+                    <h2>Select Order</h2>
+                    <h3>By Price</h3>
+                    <div class="filter">
+                        <input type="checkbox" checked> <p>from low to high</p>
+                    </div>
+
+                    <div class="filter">
+                        <input type="checkbox"> <p>from high to low</p>
+                    </div>
+
+                    <h3>By Ratings</h3>
+                    <div class="filter">
+                        <input type="checkbox"> <p>from low to high</p>
+                    </div>
+
+                    <div class="filter">
+                        <input type="checkbox"> <p>from high to low</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="pages">
+        <span class="curr-page">1</span>
+        <span><a href="search2.html">2</a></span>
+    </div>
+
+    <div class="footer">
+        <p>Copyright @2023 CSC309</p>
+    </div>
+    
+
+</body>
+</html>
