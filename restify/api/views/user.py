@@ -53,21 +53,18 @@ class UserLoginView(ObtainAuthToken):
 class UserLogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
-    # Need to fix logout
-    def post(self, request):
-        # request.auth.delete()
-        return Response(status=204)
+    def post(self, request, format=None):
+        try:
+            refresh_token = request.data["refresh"]
+            token = RefreshToken(refresh_token)
+            print(token)
+        except Exception as e:
+            return Response({'error': 'Token is invalid or expired'}, status=400)
+
+        return Response({'success': 'User logged out successfully.'}, status=200)
 
 
-class UserProfileView(RetrieveAPIView):
-    serializer_class = CustomUserSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_object(self):
-        return get_object_or_404(CustomUser, user=self.request.user)
-
-
-class UserEditProfileView(UpdateAPIView):
+class UserProfileView(RetrieveAPIView, UpdateAPIView):
     serializer_class = CustomUserSerializer
     permission_classes = [IsAuthenticated]
 
