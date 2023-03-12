@@ -2,7 +2,7 @@ from django.db import models
 from . import User
 
 
-def RentalProperty(models.Model):
+class RentalProperty(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
