@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'api',
     'rest_framework_simplejwt',
-    'django.contrib.postgres',
+    'multiselectfield',
 ]
 
 MIDDLEWARE = [
@@ -140,9 +140,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # rest framework
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        # 'rest_framework.permissions.AllowAny',
         'rest_framework.permissions.IsAuthenticated',
-    ]
+        'rest_framework.permissions.AllowAny',
+    ], 
+
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 1, # gonna change this later
 }
 
 REST_FRAMEWORK = {

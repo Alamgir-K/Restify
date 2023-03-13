@@ -6,6 +6,8 @@ from django.conf import settings
 
 app_name = "api"
 urlpatterns = [
+    path('property/<int:pk>/edit/', views.PropertyEditView.as_view(), name='edit_property'),
+    path('property/<int:pk>/delete/', views.PropertyDeleteView.as_view(), name='delete_property'),
     path('property/create/', views.PropertyCreateView.as_view(), name='create_property'),
     path('register/', views.UserSignUpView.as_view(), name='register'),
     path('login/', views.UserLoginView.as_view(), name="login"),
