@@ -11,11 +11,19 @@ from django.contrib.auth.password_validation import validate_password
 #         return data
 
 class ReservationSerializer(serializers.ModelSerializer):
-    total_cost = serializers.SerializerMethodField(method_name='get_total_cost')
+    read_only_fields = ['user', 'property', 'status', 'start_date', 'end_date']
 
     class Meta:
         model = Reservation
-        fields = ('id', 'user', 'property', 'start_date', 'end_date', 'price', 'status', 'total_cost')
+        fields = ('id', 'user', 'property', 'start_date', 'end_date', 'price', 'status')
 
-    def get_total_cost(self, obj):
-        return (obj.end_date - obj.start_date).days * obj.price
+    def update(self, instance, validated_data):
+        price = validated_data.get('price')
+        if price:
+            instance.price = price
+
+        instance.save()
+        return instance
+
+    # def get_total_cost(self, obj):
+    #     return (obj.end_date - obj.start_date).days * obj.price

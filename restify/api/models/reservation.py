@@ -1,6 +1,6 @@
 from django.db import models
-from rentalproperty import RentalProperty
 from django.contrib.auth.models import User
+from . import RentalProperty
 
 class Reservation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reservations', default=None)
@@ -17,15 +17,14 @@ class Reservation(models.Model):
     TERMINATED = 'T'
     COMPLETED = 'O'
     STATUS_CHOICES = [
+        (NEW, 'New'),
         (PENDING, 'Pending'),
-        (DENIED, 'Denied'),
         (EXPIRED, 'Expired'),
         (APPROVED, 'Approved'),
-        (CANCELED, 'Canceled'),
         (TERMINATED, 'Terminated'),
         (COMPLETED, 'Completed'),
     ]
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=PENDING)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=NEW)
 
 
 class Request(models.Model):

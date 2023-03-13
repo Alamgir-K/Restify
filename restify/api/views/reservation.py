@@ -43,7 +43,9 @@ class CreateReservationView(CreateAPIView):
             return Response({'error': 'You are not authorized to make a reservation for this property.'}, status=status.HTTP_403_FORBIDDEN)
 
         # Set the user field of the reservation to the current user
-        serializer.save(user=user)
+        serializer.save(user=user, property=rental_property)
+
+        return Response(serializer.data, status = status.HTTP_201_CREATED)
 
 
 
@@ -53,23 +55,29 @@ class EditReservationView(UpdateAPIView):
 
     def get_object(self):
         # Get the reservation object from the database based on the URL parameter
-        reservation_id = self.kwargs['reservation_id']
+        reservation_id = self.kwargs['pk']
         reservation = get_object_or_404(Reservation, id=reservation_id)
 
         # Check if the user is the owner of the rental property associated with the reservation
         user = self.request.user
-        if reservation.property.owner != user:
-            raise PermissionDenied("You don't have permission to update this reservation")
+        if reservation.user != user:
+            return Response({'error': 'You are not the owner of this property.'}, status = status.HTTP_403_FORBIDDEN)
 
         return reservation
 
-    def update(self, request, *args, **kwargs):
-        # Remove the 'property' and 'status' fields from the request data
-        request.data.pop('property', None)
-        request.data.pop('status', None)
+    def put(self, request, *args, **kwargs):
+        reservation = self.get_object()
+            
 
-        # Call the parent class update() method to perform the update
-        return super().update(request, *args, **kwargs)
+        serializer = ReservationSerializer(instance=reservation, data=request.data, partial=True)
+        # partial = True indicates that only a subset of the field will be updated
+
+        if serializer.is_valid():
+            serializer.save() # basically it is calling serializer.update() with the new info
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class DeleteReservationView(DestroyAPIView):
@@ -86,7 +94,9 @@ class DeleteReservationView(DestroyAPIView):
         if rental_property.owner != request.user.custom_user:
             raise PermissionDenied("You don't have permission to delete this reservation")
 
-        return super().delete(request, *args, **kwargs)
+        reservation.delete()
+
+        return Response({'success': 'Reservation Deleted!'}, status = status.HTTP_204_NO_CONTENT)
 
 class ReservationDetailView(APIView):
     serializer_class = ReservationSerializer
