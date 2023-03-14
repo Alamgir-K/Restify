@@ -132,12 +132,23 @@ class ReservationDetailView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class AllReservationsView(ListAPIView):
+class AllHostReservationsView(ListAPIView):
     serializer_class = ReservationSerializer
     pagination_class = PageNumberPagination
 
     def get_queryset(self):
-        query_set = Reservation.objects.all()
+        query_set = Reservation.objects.filter(property__owner=self.request.user.custom_user)
+
+        #filter by property
+        property_id = self.request.query_params.get('property', None)
+        if property_id is not None:
+            query_set = query_set.filter(property=property_id)
+
+        #filter by status
+        status = self.request.query_params.get('status', None)
+        if status is not None:
+            query_set = query_set.filter(status=status)
+
         return query_set
 
 
@@ -149,6 +160,12 @@ class AllHostRequestsView(ListAPIView):
     def get_queryset(self):
         user = self.request.user
         query_set = Request.objects.filter(reservation__user=user)
+
+        #filter by property
+        property_id = self.request.query_params.get('property', None)
+        if property_id is not None:
+            query_set = query_set.filter(reservation__property=property_id)
+
         return query_set
 
 
@@ -167,6 +184,19 @@ class UserRequestsView(ListAPIView):
     def get_queryset(self):
         user = self.request.user
         query_set = Request.objects.filter(user=user)
+
+        property_id = self.request.query_params.get('property', None)
+        # filter by property
+        if property_id is not None:
+            query_set = query_set.filter(reservation__property=property_id)
+
+        #filter by status
+        status = self.request.query_params.get('status', None)
+        if status is not None:
+            query_set = query_set.filter(status=status)
+
+        
+
         return query_set
 
     # def get(self, request, pk):
