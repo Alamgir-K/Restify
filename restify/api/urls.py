@@ -23,6 +23,11 @@ urlpatterns = [
     path('request/create/', views.CreateRequestView.as_view(), name='create_request'),
     path('request/all/', views.AllHostRequestsView.as_view(), name='all_requests'),
 
+    path('comment/create/', views.CreateCommentView.as_view(), name='create_comment'),
+    path('comment/<int:pk>/update/', views.UpdateCommentView.as_view(), name='update_comment'),
+    path('comment/<int:pk>/view/', views.ViewPropertyCommentChain.as_view(), name='view_comment'),
+    path('rating/<int:pk>/create/', views.CreateUserRating.as_view(), name='create_rating'),
+    path('rating/<int:pk>/view/', views.ViewUserRatings.as_view(), name='view_rating'),
 
     path('property/<int:pk>/edit/', views.PropertyEditView.as_view(), name='edit_property'),
     path('property/<int:pk>/delete/', views.PropertyDeleteView.as_view(), name='delete_property'),

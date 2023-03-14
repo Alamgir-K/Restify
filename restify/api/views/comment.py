@@ -8,22 +8,23 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
+from django.contrib.auth.models import User
 
 from ..models.user import CustomUser
 from ..models.rentalproperty import RentalProperty
 from ..models.reservation import Reservation, Request
 from ..models.comments import UserRating, CommentChain
-from ..serializers.comment import UserRatingSerializer, CommentChainSerializer, UserCommentSerializer
+from ..serializers.comment import UserRatingSerializer, CommentChainSerializer
 
 
 class CreateCommentView(CreateAPIView):
     serializer_class = CommentChainSerializer
-    permission_classes = (IsAuthenticated)
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         # Get the rental property object from the request data
         reservation_id = self.request.data.get('reservation')
-        new_comment = request.data.get('comment')
+        new_comment = self.request.data.get('comment')
         reservation = get_object_or_404(Reservation, id=reservation_id)
         if reservation.status != "Completed":
             return Response({'error': 'You cannot make a comment until stay is over.'}, status=status.HTTP_403_FORBIDDEN)
@@ -43,50 +44,45 @@ class CreateCommentView(CreateAPIView):
         
 
         # Set the user field of the reservation to the current user
-        serializer.save(user=user, owner=owner, reservation=reservation, comment=new_comment)
+        serializer.save(user=user, host=owner, reservation=reservation, comment=new_comment)
 
         return Response(serializer.data, status = status.HTTP_201_CREATED)
 
 class CreateUserRating(CreateAPIView):
     serializer_class = UserRatingSerializer
-    permission_classes = (IsAuthenticated)
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         # Get the rental property object from the request data
         user_id = self.kwargs['pk']
-        user = get_object_or_404(CustomUser, id=user_id)
+        print("here")
+        user = get_object_or_404(User, id=user_id)
+        print("not here")
         host = self.request.user
+        print(isinstance(host, CustomUser))
+        print(isinstance(host, User))
 
         #check that user has a request with a reservation that is completed for a property owned by the host
-        request = Request.objects.filter(user=user, reservation__property__owner=host, reservation__status="Completed")
-        if not request:
-            return Response({'error': 'You cannot comment on this user'}, status=status.HTTP_403_FORBIDDEN)
+        # request = Request.objects.filter(user=user, reservation__user=host, reservation__status="Completed")
+        # print("and here")
+        # if not request:
+        #     return Response({'error': 'You cannot comment on this user'}, status=status.HTTP_403_FORBIDDEN)
 
         #check that no comment has been made for this reservation
-        comment = UserRating.objects.filter(user=user, host=host)
-        if comment:
-            return Response({'error': 'You have already made a comment for this user.'}, status=status.HTTP_403_FORBIDDEN)
+        # comment = UserRating.objects.filter(user=user, host=host)
+        # print("and here")
+        # if comment:
+        #     return Response({'error': 'You have already made a comment for this user.'}, status=status.HTTP_403_FORBIDDEN)
 
         # Set the user field of the reservation to the current user
+        print("finally")
         serializer.save(user=user, host=host)
-
+        print("done")
         return Response(serializer.data, status = status.HTTP_201_CREATED)
 
 class UpdateCommentView(UpdateAPIView):
     serializer_class = CommentChainSerializer
-    permission_classes = (IsAuthenticated)
-
-    def get_object(self):
-        # Get the request object from the database based on the URL parameter
-        request_id = self.kwargs['pk']
-        request = get_object_or_404(Request, id=request_id)
-
-        # Check if the user is the owner of the rental property associated with the reservation
-        user = self.request.user
-        if request.user != user:
-            return Response({'error': 'You are not the owner of this request.'}, status = status.HTTP_403_FORBIDDEN)
-
-        return request
+    permission_classes = [IsAuthenticated] 
 
     def put(self, request, *args, **kwargs):
         new_comment = request.data.get('comment')
@@ -136,13 +132,13 @@ class ViewUserRatings(ListAPIView):
     def get_queryset(self):
         # Get the rental property object from the request data
         user_id = self.kwargs['pk']
-        user = get_object_or_404(CustomUser, id=user_id)
-        host = self.request.user
+        user = get_object_or_404(User, id=user_id)
+        # host = self.request.user
 
-        #check if user has a request for a reservation for a property owned by request.user
-        requests = Request.objects.filter(reservation__property__owner=host)
-        if not requests:
-            return Response({'error': 'You cannot view this user'}, status=status.HTTP_403_FORBIDDEN)
+        # #check if user has a request for a reservation for a property owned by request.user
+        # requests = Request.objects.filter(reservation__property__owner=host)
+        # if not requests:
+        #     return Response({'error': 'You cannot view this user'}, status=status.HTTP_403_FORBIDDEN)
 
         # Get the comment chain object from the database based on the URL parameter
         query_set = UserRating.objects.filter(user=user)
