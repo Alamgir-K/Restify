@@ -15,10 +15,12 @@ from ..serializers.property import PropertySerializer
 
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.parsers import MultiPartParser, FormParser
 
 class PropertyCreateView(CreateAPIView):
     serializer_class = PropertySerializer
     permission_classes = [IsAuthenticated]
+    parser_class = [MultiPartParser, FormParser]
 
     def post(self, request):
         serializer = PropertySerializer(data = request.data)
@@ -31,9 +33,9 @@ class PropertyCreateView(CreateAPIView):
                 user.save()
             property = serializer.save(owner = user)
 
-            # images = request.FILES.getlist('images')
-            # for image in images:
-            #     PropertyImage.objects.create(property = property, image = image)
+            # images_serializer = PropertyImageSerializer(data=request.data.getlist('images'), many=True)
+            # images_serializer.is_valid(raise_exception=True)
+            # images_serializer.save(property=property)
 
             return Response(serializer.data, status = status.HTTP_201_CREATED)
 
@@ -86,29 +88,45 @@ class PropertyEditView(UpdateAPIView):
         if serializer.is_valid():
             serializer.save() # basically it is calling serializer.update() with the new info
 
-            # if 'images' in request.data:
-            #     images = request.FILES.getlist('images')
-            #     for image in images:
-            #         if image.size == 0:  # check if file is empty
-            #             return Response({'error': 'Empty file uploaded.'}, status=status.HTTP_400_BAD_REQUEST)
-            #         elif imgae.size > 5242800:
-            #             return Response({'error': 'File size too large. Maximum file size is 5 MB.'}, status=status.HTTP_400_BAD_REQUEST)
-            #         else:
-            #             PropertyImage.objects.create(property=property, image=image)
-
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # also add a view property 
 
-# class PropertyListView(ListAPIView):
-#     queryset = RentalProperty.objects.all()
-#     serializer_class = PropertySerializer
-#     permission_classes = (AllowAny,)
-#     pagination_class = PageNumberPagination
-#     filter_backends = (SearchFilter, OrderingFilter)
-#     search_fileds = ('city', 'country', 'max_guest') # add amenities 
+class PropertySearchView(ListAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = PropertySerializer
+    pagination_class = PageNumberPagination
+
+    def get_queryset(self):
+        queryset = RentalProperty.objects.all()
+
+        max_guests = self.request.query_params.get('max_guests')
+        if max_guests:
+            queryset = queryset.filter(max_guests__gte=max_guests)
+
+        beds = self.request.query_params.get('beds')
+        if beds:
+            queryset = queryset.filter(beds__gte=beds)
+
+        baths = self.request.query_params.get('baths')
+        if baths:
+            queryset = queryset.filter(baths__gte=baths)
+
+        city = self.request.query_params.get('city')
+        if city:
+            queryset = queryset.filter(city__icontains=city)
+
+        country = self.request.query_params.get('country')
+        if country:
+            queryset = queryset.filter(country__icontains=country)
+
+        amenities = self.request.query_params.get('amenities')
+        if amenities:
+            queryset = queryset.filter(amenities__contains=amenities)
+        
+        return queryset
 
 
         

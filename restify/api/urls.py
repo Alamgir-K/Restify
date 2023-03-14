@@ -6,6 +6,9 @@ from django.conf import settings
 
 app_name = "api"
 urlpatterns = [
+
+    path('property/search/', views.PropertySearchView.as_view(), name='property_search'),
+
     path('reservation/<int:pk>/edit/', views.EditReservationView.as_view(), name='edit_reservation'),
     path('reservation/<int:pk>/delete/', views.DeleteReservationView.as_view(), name='delete_property'),
     path('reservation/create/', views.CreateReservationView.as_view(), name='create_property'),
@@ -19,6 +22,7 @@ urlpatterns = [
     path('request/<int:pk>/next/', views.RequestNextView.as_view(), name='request_next'),
     path('request/create/', views.CreateRequestView.as_view(), name='create_request'),
     path('request/all/', views.AllHostRequestsView.as_view(), name='all_requests'),
+
 
     path('property/<int:pk>/edit/', views.PropertyEditView.as_view(), name='edit_property'),
     path('property/<int:pk>/delete/', views.PropertyDeleteView.as_view(), name='delete_property'),
