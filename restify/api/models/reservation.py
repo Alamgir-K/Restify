@@ -1,9 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
+from .user import CustomUser
 from . import RentalProperty
 
+
 class Reservation(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reservations', default=None)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='reservations', default=None)
     property = models.ForeignKey(RentalProperty, on_delete=models.CASCADE, related_name='reservations')
     start_date = models.DateField()
     end_date = models.DateField()
@@ -27,7 +28,7 @@ class Reservation(models.Model):
 
 
 class Request(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None)
     reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE)
     message = models.TextField()
     guest = models.IntegerField()
