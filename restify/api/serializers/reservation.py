@@ -27,3 +27,22 @@ class ReservationSerializer(serializers.ModelSerializer):
 
     # def get_total_cost(self, obj):
     #     return (obj.end_date - obj.start_date).days * obj.price
+
+class RequestSerializer(serializers.ModelSerializer):
+    read_only_fields = ['user', 'reservation', 'status', 'created_at']
+
+    class Meta:
+        model = Request
+        fields = ('id', 'user', 'reservation', 'message', 'guest', 'created_at', 'status')
+
+    def update(self, instance, validated_data):
+        message = validated_data.get('message')
+        if message:
+            instance.message = message
+
+        guest = validated_data.get('guest')
+        if guest:
+            instance.guest = guest
+
+        instance.save()
+        return instance

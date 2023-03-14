@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'multiselectfield',
 ]
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -144,8 +145,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ], 
 
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 1, # gonna change this later
 }
 
 REST_FRAMEWORK = {
@@ -154,6 +153,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 1, # gonna change this later
 }
 
 

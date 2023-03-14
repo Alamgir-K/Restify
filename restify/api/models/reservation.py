@@ -19,16 +19,15 @@ class Reservation(models.Model):
     STATUS_CHOICES = [
         (NEW, 'New'),
         (PENDING, 'Pending'),
-        (EXPIRED, 'Expired'),
         (APPROVED, 'Approved'),
-        (TERMINATED, 'Terminated'),
         (COMPLETED, 'Completed'),
+        (TERMINATED, 'Terminated'),
     ]
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=NEW)
 
 
 class Request(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
     reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE)
     message = models.TextField()
     guest = models.IntegerField()
