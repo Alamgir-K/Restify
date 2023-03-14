@@ -30,7 +30,9 @@ class PropertySerializer(serializers.ModelSerializer):
     class Meta:
         # serializers works just like django forms
         model = RentalProperty
+
         fields = ['id', 'owner_username', 'name', 'address', 'city', 'country', 'max_guests', 'beds', 'baths', 'description', 'amenities', 'images', 'uploaded_images', 'deleted_images']
+
 
     def validate_amenities(self, value):
         if len(value) > 8:
