@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'api',
     'rest_framework_simplejwt',
     'multiselectfield',
+    'drf_spectacular',
 ]
 
 
@@ -56,7 +57,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-MEDIA_ROOT = os.path.join(BASE_DIR , "media")
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # MEDIA_ROOT = BASE_DIR / "media"
 
 MEDIA_URL = "/media/"
@@ -143,7 +144,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
         'rest_framework.permissions.AllowAny',
-    ], 
+    ],
 
 }
 
@@ -154,9 +155,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-
-    'PAGE_SIZE': 1, # gonna change this later
-
+    'PAGE_SIZE': 1,  # gonna change this later
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 
@@ -164,8 +164,9 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
 }
 
-
-# Authentication backends
-# AUTHENTICATION_BACKENDS = (
-#     'django.contrib.auth.backends.ModelBackend',
-# )
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Your Project API',
+    'DESCRIPTION': 'Your project description',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
