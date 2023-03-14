@@ -4,35 +4,49 @@ from ..models.rentalproperty import RentalProperty, PropertyImage
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 
-# class ImageSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = PropertyImage
-#         fields = '__all__'
-
+class PropertyImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PropertyImage
+        fields = '__all__'
 
 class PropertySerializer(serializers.ModelSerializer):
     owner_username = serializers.ReadOnlyField(source='owner.user.username')
-    # images = serializers.ListField(child=serializers.ImageField(), required=False)
-    # amenities = serializers.MultipleChoiceField(choices=RentalProperty.AMENITIES_CHOICES, required=False)
-    # amenities = serializers.ListField(child=serializers.ChoiceField(choices=RentalProperty.AMENITIES_CHOICES), required=False)
 
-    # images = ImageSerializer(many = True, required = False)
+    images = PropertyImageSerializer(many=True, required=False, read_only = True)
+    uploaded_images = serializers.ListField(
+        child=serializers.ImageField(allow_empty_file=False, use_url=False),
+        write_only=True, required=False
+    )
+    deleted_images = serializers.ListField(
+        child=serializers.IntegerField(),
+        write_only=True,
+        required=False
+    )
+
+    amenities = serializers.MultipleChoiceField(choices=RentalProperty.AMENITIES_CHOICES, required=False, allow_blank=True)
+
     read_only_fields = ['owner', 'city', 'country']
 
     class Meta:
         # serializers works just like django forms
         model = RentalProperty
-        fields = ['owner_username', 'name', 'address', 'city', 'country', 'max_guests', 'beds', 'baths', 'description']
+        fields = ['id', 'owner_username', 'name', 'address', 'city', 'country', 'max_guests', 'beds', 'baths', 'description', 'amenities', 'images', 'uploaded_images', 'deleted_images']
 
-    # def create(self, validated_data):
-    #     amenities = set(validated_data.pop('amenities', []))
-    #     rental_property = RentalProperty.objects.create(**validated_data)
-    #     if amenities:
-    #         for amenity in amenities:
-    #             rental_property.amenities.add(amenity)
-    #     return rental_property
+    def validate_amenities(self, value):
+        if len(value) > 8:
+            raise serializers.ValidationError("You may select up to 8 amenities.")
+        return value
 
-  
+    def create(self, validated_data):
+        uploaded_images = validated_data.pop("uploaded_images", None)
+        property = RentalProperty.objects.create(**validated_data)
+
+        if uploaded_images:
+            for image in uploaded_images:
+                PropertyImage.objects.create(property=property, image=image)
+
+        return property
+
     def update(self, instance, validated_data):
         name = validated_data.get('name')
         if name:
@@ -60,40 +74,28 @@ class PropertySerializer(serializers.ModelSerializer):
 
         amenities = validated_data.get('amenities')
         if amenities:
-            instance.amenities = amenities
+            ex_list = instance.amenities
+            for amenity in amenities:
+                if amenity not in ex_list:
+                    ex_list.append(amenity)
+                else:
+                    ex_list.remove(amenity)
+            instance.amenities = ex_list
 
-        # if 'images' in self.context['request'].data:
-        #     # indicating that the user has uploaded some images
+        uploaded_images = validated_data.get('uploaded_images')
+        if uploaded_images:
+            for image in uploaded_images:
+                PropertyImage.objects.create(property = instance, image=image)
 
-        #     images = self.context['request'].FILES.getlist('images')
+        deleted_images = validated_data.get('deleted_images')
+        if deleted_images:
+            for img_id in deleted_images:
+                try:
+                    image = PropertyImage.objects.get(id=img_id, property=instance)
+                    image.delete()
+                except PropertyImage.DoesNotExist:
+                    pass
 
-        #     # FILES contains the list of images -> usually uploaded files can 
-        #     # be accessed in this way in django. 
-        #     # We use getlist to access all the images that were uploaded
-
-        #     for image in images:
-        #         if image.size > 5000000:
-        #             raise serializers.ValidationError(
-        #                 {"image": "Image size needs to be 5MB!"}
-        #             )
-        #         elif image.size == 0:
-        #             raise serializers.ValidationError(
-        #                 {"image": "File empty"}
-        #             )
-        #         PropertyImage.objects.create(property=instance, image=image)
-                # for every image that was uploaded we create a PropertyImage 
-                # object so then we can access them later on 
-
-        # double check on this one
-        # might need to make a separete view for deleting images 
-        # if 'deleted_images' in self.context['request'].data:
-        #     deleted_images = self.context['request'].data.getlist('deleted_images')
-        #     for deleted_image in deleted_images:
-        #         try:
-        #             image = PropertyImage.objects.get(pk=deleted_image, property=instance)
-        #             image.delete()
-        #         except PropertyImage.DoesNotExist:
-        #             pass
         
         instance.save()
         return instance

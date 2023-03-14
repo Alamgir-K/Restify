@@ -24,10 +24,10 @@ class RentalProperty(models.Model):
         ('parking', 'Parking'),
         ('balcony', 'Balcony'),
     )
-    amenities = MultiSelectField(choices=AMENITIES_CHOICES, blank=True, validators=[MaxValueMultiFieldValidator(3)])
+    amenities = MultiSelectField(choices=AMENITIES_CHOICES, blank=True, validators=[MaxValueMultiFieldValidator(8)])
 
 class PropertyImage(models.Model):
     property = models.ForeignKey(RentalProperty, on_delete = models.CASCADE, related_name = 'images')
-    image = models.ImageField(upload_to = 'media/property/')
+    image = models.ImageField(upload_to = 'property')
 
 
