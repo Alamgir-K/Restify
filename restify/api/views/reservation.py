@@ -290,6 +290,9 @@ class ReservationNextView(UpdateAPIView):
             res.status = "Pending"
             res.save()
             req.save()
+        elif new_state == "Completed":
+            res.status = "Completed"
+            res.save()
         else:
             return Response({'error': 'You cannot change the status to this.'}, status = status.HTTP_403_FORBIDDEN)
 
