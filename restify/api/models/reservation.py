@@ -4,8 +4,10 @@ from . import RentalProperty
 
 
 class Reservation(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='reservations', default=None)
-    property = models.ForeignKey(RentalProperty, on_delete=models.CASCADE, related_name='reservations')
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name='reservations', default=None)
+    property = models.ForeignKey(
+        RentalProperty, on_delete=models.CASCADE, related_name='reservations')
     start_date = models.DateField()
     end_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -25,4 +27,5 @@ class Reservation(models.Model):
         (CANCELED, "Cancelled"),
         (TERMINATED, 'Terminated'),
     ]
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default=PENDING)
+    status = models.CharField(
+        max_length=1, choices=STATUS_CHOICES, default=PENDING)
