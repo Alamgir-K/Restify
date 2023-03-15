@@ -10,3 +10,5 @@ class Notification(models.Model):
         Reservation, on_delete=models.CASCADE, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
+    is_cleared = models.BooleanField(default=False)
+    message = models.TextField(default=None)

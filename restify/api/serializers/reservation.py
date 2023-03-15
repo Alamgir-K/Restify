@@ -10,15 +10,18 @@ from django.contrib.auth.password_validation import validate_password
 #     def to_representation(self, data):
 #         return data
 
+
 class ReservationSerializer(serializers.ModelSerializer):
     user_username = serializers.ReadOnlyField(source='user.user.username')
     user_id = serializers.ReadOnlyField(source="user.id")
-    
-    read_only_fields = ['user', 'property', 'status', 'start_date', 'end_date', 'created_at', 'guest', 'message']
+
+    read_only_fields = ['user', 'property', 'status',
+                        'start_date', 'end_date', 'created_at', 'guest', 'message']
 
     class Meta:
         model = Reservation
-        fields = ('id', 'user_username', 'user_id', 'property', 'start_date', 'end_date', 'created_at', 'guest', 'message')
+        fields = ('id', 'user_username', 'user_id', 'property', 'start_date',
+                  'end_date', 'created_at', 'guest', 'message', 'status')
 
     # def update(self, instance, validated_data):
     #     price = validated_data.get('price')
