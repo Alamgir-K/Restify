@@ -16,7 +16,9 @@ class CreateCommentView(CreateAPIView):
     serializer_class = CommentChainCreateSerializer
     permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)  
         # Get the rental property object from the request data
         reservation_id = self.request.data.get('reservation')
         new_comment = self.request.data.get('comment')
@@ -47,9 +49,11 @@ class CreateUserRating(CreateAPIView):
     serializer_class = UserRatingSerializer
     permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)  
         # Get the rental property object from the request data
-        user_id = self.kwargs['pk']
+        user_id = self.kwargs.get('pk')
         user = get_object_or_404(CustomUser, id=user_id)
         host = self.request.user.custom_user
 

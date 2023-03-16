@@ -21,7 +21,9 @@ class CreateReservationView(CreateAPIView):
     serializer_class = ReservationCreateSerializer
     permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)  
         # Get the rental property object from the request data
         rental_property_id = self.request.data.get('property')
         rental_property = RentalProperty.objects.get(id=rental_property_id)
