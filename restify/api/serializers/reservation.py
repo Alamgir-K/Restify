@@ -15,13 +15,21 @@ class ReservationSerializer(serializers.ModelSerializer):
     user_username = serializers.ReadOnlyField(source='user.user.username')
     user_id = serializers.ReadOnlyField(source="user.id")
 
-    read_only_fields = ['user', 'property', 'status',
+    read_only_fields = ['user', 'property',
                         'start_date', 'end_date', 'created_at', 'guest', 'message']
 
     class Meta:
         model = Reservation
         fields = ('id', 'user_username', 'user_id', 'property', 'start_date',
                   'end_date', 'created_at', 'guest', 'message', 'status')
+
+    def update(self, instance, validated_data):
+        status = validated_data.get('status')
+        if status:
+            instance.status = status
+
+        instance.save()
+        return instance
 
     # def update(self, instance, validated_data):
     #     price = validated_data.get('price')

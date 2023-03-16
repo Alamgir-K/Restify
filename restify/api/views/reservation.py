@@ -54,44 +54,63 @@ class EditReservationView(UpdateAPIView):
     serializer_class = ReservationSerializer
     permission_classes = [IsAuthenticated]
 
-    def put(self, request, *args, **kwargs):
-        reservation_id = self.kwargs['pk']
+    def get_object(self):
+        reservation_id = self.kwargs.get('pk')
         reservation = get_object_or_404(Reservation, id=reservation_id)
+        return reservation
+
+    def put(self, request, *args, **kwargs):
+        reservation = self.get_object()
         user = get_object_or_404(CustomUser, user=self.request.user)
 
         new_status = self.request.data.get('status')
-        if reservation.user == user:
-            if new_status == "Cancelled":
-                reservation.status = new_status
-                reservation.save()
+        # if reservation.user == user:
+        #     if new_status == "Cancelled":
+        #         serializer = ReservationSerializer(instance=reservation, data=request.data, partial=True)
 
-                notification = Notification.objects.create(
-                    user=reservation.property.owner,
-                    reservation=reservation,
-                    message=f"{user.user.username} has cancelled their reservation for {reservation.property.name}"
-                )
+        #         if serializer.is_valid():
+        #             serializer.save()
 
-                return Response({'Nice'}, status=status.HTTP_200_OK)
-            else:
-                return Response({'error': 'You cannot update this reservation to this'}, status=status.HTTP_403_FORBIDDEN)
+        #             notification = Notification.objects.create(
+        #             user=reservation.property.owner,
+        #             reservation=reservation,
+        #             message=f"{user.user.username} has cancelled their reservation for {reservation.property.name}"
+        #         )
+
+        #             return Response(serializer.data, status=status.HTTP_200_OK)
+        #         return Response({'error': 'You cannot update this reservation to this'}, status=status.HTTP_403_FORBIDDEN)
+
         if reservation.property.owner == user:
-            print(reservation.status)
+            print("owner found")
             if reservation.status == "Pending" and new_status in ["Denied", "Approved", "Terminated"]:
-                reservation.status = new_status
-                reservation.save()
+                print("in properly")
+                serializer = ReservationSerializer(instance=reservation, data=request.data, partial=True)
 
-                notification = Notification.objects.create(
-                    user=reservation.user,
-                    reservation=reservation,
-                    message=f"{reservation.property.owner.user.username} has {reservation.status} your reservation for {reservation.property.name}"
-                )
+                if serializer.is_valid():
+                    print("serializer passed")
+                    serializer.save()
+                #     notification = Notification.objects.create(
+                #     user=reservation.user,
+                #     reservation=reservation,
+                #     message=f"{reservation.property.owner.user.username} has {reservation.status} your reservation for {reservation.property.name}"
+                # )
+
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                return Response({'error': 'You cannot update this reservation to this'}, status=status.HTTP_403_FORBIDDEN)
 
             elif reservation.status == "Approved" and new_status in ["Completed", "Terminated"]:
-                reservation.status = new_status
-                reservation.save()
-            else:
+                serializer = ReservationSerializer(instance=reservation, data=request.data, partial=True)
+
+                if serializer.is_valid():
+                    serializer.save()
+                #     notification = Notification.objects.create(
+                #     user=reservation.user,
+                #     reservation=reservation,
+                #     message=f"{reservation.property.owner.user.username} has {reservation.status} your reservation for {reservation.property.name}"
+                # )
+
+                    return Response(serializer.data, status=status.HTTP_200_OK)   
                 return Response({'error': 'You cannot update this reservation to this'}, status=status.HTTP_403_FORBIDDEN)
-            return Response({'Nice'}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'You cannot update this reservation'}, status=status.HTTP_403_FORBIDDEN)
 
