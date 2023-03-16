@@ -125,9 +125,9 @@ class ViewUserRatings(ListAPIView):
         host = self.request.user.custom_user
 
         #check if user has a request for a reservation for a property owned by request.user
-        res = Reservation.objects.filter(property__owner=host, user=user)
-        if not res:
-            return Response({'error': 'You cannot view this user'}, status=status.HTTP_403_FORBIDDEN)
+        # res = Reservation.objects.filter(property__owner=host, user=user)
+        # if not res:
+        #     return Response({'error': 'You cannot view this user'}, status=status.HTTP_403_FORBIDDEN)
 
         # Get the comment chain object from the database based on the URL parameter
         query_set = UserRating.objects.filter(user=user)

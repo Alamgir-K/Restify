@@ -11,7 +11,7 @@ class ReservationCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Reservation
-        fields = ['property',
+        fields = ['id', 'property',
                             'start_date', 'end_date', 'created_at', 'guest', 'message', 'status', 'user_id', 'user_username']
 
         read_only_fields = ['status']

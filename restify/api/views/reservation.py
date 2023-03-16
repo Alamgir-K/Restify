@@ -117,7 +117,7 @@ class DeleteReservationView(DestroyAPIView):
         reservation_id = self.kwargs['pk']
         reservation = get_object_or_404(Reservation, id=reservation_id)
 
-        if reservation.user.custom_user != self.request.user.custom_user:
+        if reservation.user != self.request.user.custom_user:
             return Response({'error': 'You cannot delete this reservation'}, status=status.HTTP_403_FORBIDDEN)
 
         reservation.delete()
