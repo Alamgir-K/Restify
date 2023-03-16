@@ -9,7 +9,7 @@ class PropertyImageSerializer(serializers.ModelSerializer):
         model = PropertyImage
         fields = '__all__'
 
-class PropertySerializer(serializers.ModelSerializer):
+class PropertyCreateSerializer(serializers.ModelSerializer):
     owner_username = serializers.ReadOnlyField(source='owner.user.username')
 
     images = PropertyImageSerializer(many=True, required=False, read_only = True)
@@ -17,21 +17,19 @@ class PropertySerializer(serializers.ModelSerializer):
         child=serializers.ImageField(allow_empty_file=False, use_url=False),
         write_only=True, required=False
     )
-    deleted_images = serializers.ListField(
-        child=serializers.IntegerField(),
-        write_only=True,
-        required=False
-    )
+    # deleted_images = serializers.ListField(
+    #     child=serializers.IntegerField(),
+    #     write_only=True,
+    #     required=False
+    # )
 
     amenities = serializers.MultipleChoiceField(choices=RentalProperty.AMENITIES_CHOICES, required=False, allow_blank=True)
-
-    read_only_fields = ['owner', 'city', 'country']
 
     class Meta:
         # serializers works just like django forms
         model = RentalProperty
 
-        fields = ['id', 'owner_username', 'name', 'address', 'city', 'country', 'max_guests', 'beds', 'baths', 'description', 'amenities', 'images', 'uploaded_images', 'deleted_images']
+        fields = ['id', 'owner_username', 'name', 'address', 'city', 'country', 'price', 'max_guests', 'beds', 'baths', 'description', 'amenities', 'images', 'uploaded_images']
 
 
     def validate_amenities(self, value):
@@ -49,6 +47,30 @@ class PropertySerializer(serializers.ModelSerializer):
 
         return property
 
+class PropertyEditSerializer(serializers.ModelSerializer):
+    owner_username = serializers.ReadOnlyField(source='owner.user.username')
+
+    images = PropertyImageSerializer(many=True, required=False, read_only = True)
+    uploaded_images = serializers.ListField(
+        child=serializers.ImageField(allow_empty_file=False, use_url=False),
+        write_only=True, required=False
+    )
+    deleted_images = serializers.ListField(
+        child=serializers.IntegerField(),
+        write_only=True,
+        required=False
+    )
+
+    amenities = serializers.MultipleChoiceField(choices=RentalProperty.AMENITIES_CHOICES, required=False, allow_blank=True)
+
+    class Meta:
+        # serializers works just like django forms
+        model = RentalProperty
+
+        fields = ['id', 'owner_username', 'name', 'address', 'city', 'country', 'price', 'max_guests', 'beds', 'baths', 'description', 'amenities', 'images', 'uploaded_images', 'deleted_images']
+        read_only_fields = ['id', 'owner_username', 'city', 'country']
+
+
     def update(self, instance, validated_data):
         name = validated_data.get('name')
         if name:
@@ -57,6 +79,10 @@ class PropertySerializer(serializers.ModelSerializer):
         address = validated_data.get('address')
         if address:
             instance.address = address
+
+        price = validated_data.get('price')
+        if price:
+            instance.price = price
 
         max_guests = validated_data.get('max_guests')
         if max_guests:
@@ -103,5 +129,4 @@ class PropertySerializer(serializers.ModelSerializer):
         return instance
 
         
-
 

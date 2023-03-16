@@ -2,6 +2,7 @@ from django.db import models
 from . import CustomUser
 from multiselectfield import MultiSelectField
 from multiselectfield.validators import MaxValueMultiFieldValidator
+from django.core.validators import MinValueValidator
 
 
 class RentalProperty(models.Model):
@@ -11,6 +12,7 @@ class RentalProperty(models.Model):
     address = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
     country = models.CharField(max_length=255)
+    price = models.FloatField(validators=[MinValueValidator(0.0)])
     max_guests = models.PositiveIntegerField()
     beds = models.PositiveIntegerField()
     baths = models.PositiveIntegerField()

@@ -11,19 +11,18 @@ from rest_framework.authentication import TokenAuthentication
 
 from ..models.user import CustomUser
 from ..models.rentalproperty import RentalProperty, PropertyImage
-from ..serializers.property import PropertySerializer
-
+from ..serializers.property import PropertyCreateSerializer, PropertyEditSerializer
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework import filters
 from rest_framework.parsers import MultiPartParser, FormParser
 
 class PropertyCreateView(CreateAPIView):
-    serializer_class = PropertySerializer
+    serializer_class = PropertyCreateSerializer
     permission_classes = [IsAuthenticated]
     parser_class = [MultiPartParser, FormParser]
 
     def post(self, request):
-        serializer = PropertySerializer(data = request.data)
+        serializer = PropertyCreateSerializer(data = request.data)
         
         if serializer.is_valid():
             user = get_object_or_404(CustomUser, user=self.request.user)
@@ -42,7 +41,7 @@ class PropertyCreateView(CreateAPIView):
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 class PropertyDeleteView(DestroyAPIView):
-    serializer_class = PropertySerializer
+    serializer_class = PropertyCreateSerializer
     permission_classes = [IsAuthenticated]
 
     def delete(self, request, *args, **kwargs):
@@ -66,7 +65,7 @@ class PropertyDeleteView(DestroyAPIView):
         return Response({'success': 'Property Deleted!'}, status = status.HTTP_204_NO_CONTENT)
 
 class PropertyEditView(UpdateAPIView):
-    serializer_class = PropertySerializer
+    serializer_class = PropertyEditSerializer
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
@@ -82,7 +81,7 @@ class PropertyEditView(UpdateAPIView):
         if property.owner != user:
             return Response({'error': 'You are not the owner of this property.'}, status = status.HTTP_403_FORBIDDEN)
 
-        serializer = PropertySerializer(instance=property, data=request.data, partial=True)
+        serializer = PropertyEditSerializer(instance=property, data=request.data, partial=True)
         # partial = True indicates that only a subset of the field will be updated
 
         if serializer.is_valid():
@@ -96,8 +95,10 @@ class PropertyEditView(UpdateAPIView):
 
 class PropertySearchView(ListAPIView):
     permission_classes = [AllowAny]
-    serializer_class = PropertySerializer
+    serializer_class = PropertyCreateSerializer
     pagination_class = PageNumberPagination
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['price', 'max_guests']
 
     def get_queryset(self):
         queryset = RentalProperty.objects.all()
