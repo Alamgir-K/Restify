@@ -13,20 +13,18 @@ from ..serializers.user import CustomUserSerializer
 from ..models.user import CustomUser
 from ..models.reservation import Reservation
 from ..models.rentalproperty import RentalProperty
-from ..serializers.reservation import ReservationSerializer
+from ..serializers.reservation import ReservationCreateSerializer, ReservationUpdateSerializer
+from django.core import serializers
 
 
 class CreateReservationView(CreateAPIView):
-    serializer_class = ReservationSerializer
+    serializer_class = ReservationCreateSerializer
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         # Get the rental property object from the request data
         rental_property_id = self.request.data.get('property')
         rental_property = RentalProperty.objects.get(id=rental_property_id)
-
-        # filter for all reservations that have this property, and their start/end dates overlap
-        # if one of those reservations status is Approved, return an error
 
         other_reservations = Reservation.objects.filter(
             property=rental_property)
@@ -38,7 +36,6 @@ class CreateReservationView(CreateAPIView):
         user = get_object_or_404(CustomUser, user=self.request.user)
         serializer.save(user=user, property=rental_property, status="Pending")
 
-        # reservation = Reservation.objects.get(id=serializer.data.get('id'))
         reservation = serializer.instance
 
         notification = Notification.objects.create(
@@ -51,72 +48,69 @@ class CreateReservationView(CreateAPIView):
 
 
 class EditReservationView(UpdateAPIView):
-    serializer_class = ReservationSerializer
+    serializer_class = ReservationUpdateSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_object(self):
-        reservation_id = self.kwargs.get('pk')
-        reservation = get_object_or_404(Reservation, id=reservation_id)
-        return reservation
-
     def put(self, request, *args, **kwargs):
-        reservation = self.get_object()
+        reservation_id = self.kwargs['pk']
+        reservation = get_object_or_404(Reservation, id=reservation_id)
         user = get_object_or_404(CustomUser, user=self.request.user)
 
         new_status = self.request.data.get('status')
-        # if reservation.user == user:
-        #     if new_status == "Cancelled":
-        #         serializer = ReservationSerializer(instance=reservation, data=request.data, partial=True)
+        if reservation.user == user:
+            if new_status == "Cancelled":
+                
+                reservation.status = new_status
+                reservation.save()
+                serializer = ReservationUpdateSerializer(reservation)
 
-        #         if serializer.is_valid():
-        #             serializer.save()
+                notification = Notification.objects.create(
+                    user=reservation.user,
+                    reservation=reservation,
+                    message=f"{reservation.property.owner.user.username} has {reservation.status} your reservation for {reservation.property.name}"
+                )
 
-        #             notification = Notification.objects.create(
-        #             user=reservation.property.owner,
-        #             reservation=reservation,
-        #             message=f"{user.user.username} has cancelled their reservation for {reservation.property.name}"
-        #         )
+                return Response(serializer.data)
 
-        #             return Response(serializer.data, status=status.HTTP_200_OK)
-        #         return Response({'error': 'You cannot update this reservation to this'}, status=status.HTTP_403_FORBIDDEN)
-
-        if reservation.property.owner == user:
-            print("owner found")
-            if reservation.status == "Pending" and new_status in ["Denied", "Approved", "Terminated"]:
-                print("in properly")
-                serializer = ReservationSerializer(instance=reservation, data=request.data, partial=True)
-
-                if serializer.is_valid():
-                    print("serializer passed")
-                    serializer.save()
-                #     notification = Notification.objects.create(
-                #     user=reservation.user,
-                #     reservation=reservation,
-                #     message=f"{reservation.property.owner.user.username} has {reservation.status} your reservation for {reservation.property.name}"
-                # )
-
-                    return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
                 return Response({'error': 'You cannot update this reservation to this'}, status=status.HTTP_403_FORBIDDEN)
+        if reservation.property.owner == user:
+            if reservation.status == "Pending" and new_status in ["Denied", "Approved", "Terminated"]:
+                reservation.status = new_status
+                reservation.save()
+                serializer = ReservationUpdateSerializer(reservation)
+
+                notification = Notification.objects.create(
+                    user=reservation.user,
+                    reservation=reservation,
+                    message=f"{reservation.property.owner.user.username} has {reservation.status} your reservation for {reservation.property.name}"
+                )
+
+                return Response(serializer.data)
+
 
             elif reservation.status == "Approved" and new_status in ["Completed", "Terminated"]:
-                serializer = ReservationSerializer(instance=reservation, data=request.data, partial=True)
+                reservation.status = new_status
+                reservation.save()
+                serializer = ReservationUpdateSerializer(reservation)
 
-                if serializer.is_valid():
-                    serializer.save()
-                #     notification = Notification.objects.create(
-                #     user=reservation.user,
-                #     reservation=reservation,
-                #     message=f"{reservation.property.owner.user.username} has {reservation.status} your reservation for {reservation.property.name}"
-                # )
+                notification = Notification.objects.create(
+                    user=reservation.user,
+                    reservation=reservation,
+                    message=f"{reservation.property.owner.user.username} has {reservation.status} your reservation for {reservation.property.name}"
+                )
 
-                    return Response(serializer.data, status=status.HTTP_200_OK)   
+                return Response(serializer.data)
+
+
+            else:
                 return Response({'error': 'You cannot update this reservation to this'}, status=status.HTTP_403_FORBIDDEN)
         else:
             return Response({'error': 'You cannot update this reservation'}, status=status.HTTP_403_FORBIDDEN)
 
 
 class DeleteReservationView(DestroyAPIView):
-    serializer_class = ReservationSerializer
+    serializer_class = ReservationCreateSerializer
     permission_classes = [IsAuthenticated]
 
     def delete(self, request, *args, **kwargs):
@@ -132,7 +126,7 @@ class DeleteReservationView(DestroyAPIView):
 
 
 class HostReservationsView(ListAPIView):
-    serializer_class = ReservationSerializer
+    serializer_class = ReservationCreateSerializer
     pagination_class = PageNumberPagination
 
     def get_queryset(self):
@@ -153,7 +147,7 @@ class HostReservationsView(ListAPIView):
 
 
 class UserReservationsView(ListAPIView):
-    serializer_class = ReservationSerializer
+    serializer_class = ReservationCreateSerializer
     pagination_class = PageNumberPagination
 
     def get_queryset(self):
