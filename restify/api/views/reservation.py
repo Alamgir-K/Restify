@@ -26,6 +26,13 @@ class CreateReservationView(CreateAPIView):
         rental_property_id = self.request.data.get('property')
         rental_property = RentalProperty.objects.get(id=rental_property_id)
 
+        # check whether reservation by this user for this property already exists
+        exists = Reservation.objects.filter(
+            property=rental_property, user=self.request.user.custom_user)
+        if exists:
+            print("no duplicate")
+            return Response({'error': 'You have already made a reservation for this property'}, status=status.HTTP_403_FORBIDDEN)
+
         other_reservations = Reservation.objects.filter(
             property=rental_property)
         for reservation in other_reservations:
