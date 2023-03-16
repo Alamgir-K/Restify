@@ -9,11 +9,11 @@ from ..models.user import CustomUser
 from ..models.rentalproperty import RentalProperty
 from ..models.reservation import Reservation
 from ..models.comments import UserRating, CommentChain
-from ..serializers.comment import UserRatingSerializer, CommentChainSerializer
+from ..serializers.comment import UserRatingSerializer, CommentChainUpdateSerializer, CommentChainCreateSerializer
 
 
 class CreateCommentView(CreateAPIView):
-    serializer_class = CommentChainSerializer
+    serializer_class = CommentChainCreateSerializer
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
@@ -23,12 +23,13 @@ class CreateCommentView(CreateAPIView):
         reservation = get_object_or_404(Reservation, id=reservation_id)
 
         owner = reservation.property.owner
-        user = self.request.user.custom_user
+        user = get_object_or_404(CustomUser, user=self.request.user)
+        # user = self.request.user.custom_user
 
         if reservation.user != user:
             return Response({'error': 'This is not your reservation.'}, status=status.HTTP_403_FORBIDDEN)
 
-        if reservation.status not in ["Completed", "Cancelled"]:
+        if reservation.status not in ["Completed", "Cancelled"]: 
             return Response({'error': 'You cannot make a comment until stay is over.'}, status=status.HTTP_403_FORBIDDEN)
 
         #check that no comment has been made for this reservation
@@ -67,11 +68,11 @@ class CreateUserRating(CreateAPIView):
         return Response(serializer.data, status = status.HTTP_201_CREATED)
 
 class UpdateCommentView(UpdateAPIView):
-    serializer_class = CommentChainSerializer
+    serializer_class = CommentChainUpdateSerializer
     permission_classes = [IsAuthenticated] 
 
     def put(self, request, *args, **kwargs):
-        new_comment = request.data.get('comment')
+        new_comment = request.data.get('message')
         if new_comment:
             user = self.request.user.custom_user
             comment_id = self.kwargs['pk']
@@ -93,13 +94,14 @@ class UpdateCommentView(UpdateAPIView):
                 
             comment.save()
 
-            return Response({'success': 'New Comment!'}, status=status.HTTP_200_OK)
+            serializer = CommentChainUpdateSerializer(comment)
+            return Response(serializer.data)
 
         else:
             return Response({'error': 'You must write something'}, status = status.HTTP_403_FORBIDDEN)
 
 class ViewPropertyCommentChain(ListAPIView):
-    serializer_class = CommentChainSerializer
+    serializer_class = CommentChainCreateSerializer
     pagination_class = PageNumberPagination
 
     def get_queryset(self):
