@@ -4,3 +4,4 @@ djangorestframework-simplejwt
 Pillow==9.4.0
 django-multiselectfield==0.1.12
 drf-spectacular
+django-cors-headers
