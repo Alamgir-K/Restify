@@ -1,1 +1,1 @@
-python3 restify/manage.py runserver
+python3 backend/manage.py runserver
