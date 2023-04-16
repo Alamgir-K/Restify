@@ -15,7 +15,7 @@ const EditProfile = () => {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [phone, setPhone] = useState("");
-  const [avatar, setAvatar] = useState(null);
+  const [avatar, setAvatar] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -29,22 +29,18 @@ const EditProfile = () => {
           { headers }
         );
 
-        // setProfile(profileResponse.data);
+        setAvatar(profileResponse.data.avatar);
+
         setUsername(profileResponse.data.user.username);
         setEmail(profileResponse.data.user.email);
         setFname(profileResponse.data.user.first_name);
         setLname(profileResponse.data.user.last_name);
         setPhone(profileResponse.data.phone_number);
-        setAvatar(profileResponse.data.avatar);
+        // setAvatar(profileResponse.data.avatar);
         setPassword1(profileResponse.data.user.password);
         setPassword2(profileResponse.data.user.password);
-        // Print the phone number
 
-        console.log(profileResponse.data.phone_number);
-
-        setAvatar(profileResponse.data.avatar);
-
-        console.log(profileResponse.data);
+        console.log("Avatar URL:", avatar);
       } catch (error) {
         console.error(error);
       }
@@ -121,21 +117,23 @@ const EditProfile = () => {
                     >
                       <span className="inline-block h-24 w-24 overflow-hidden rounded-full bg-[#fbf8f0]">
                         <img src={avatar} />
+                        {/* {avatar} */}
                       </span>
-                      {/* <input
-                        id="avatar"
-                        name="avatar"
-                        type="file"
-                        className="sr-only"
-                        // value={avatar}
-                        onChange={(e) => setAvatar(e.target.value)}
-                      /> */}
                       <input
                         id="avatar"
                         name="avatar"
                         type="file"
                         className="sr-only"
-                        ref={(input) => setAvatar(input)}
+                        // onChange={(e) => {
+                        //   const file = e.target.files[0];
+                        //   const reader = new FileReader();
+                        //   reader.onloadend = () => {
+                        //     setAvatar(reader.result);
+                        //   };
+                        //   if (file) {
+                        //     reader.readAsDataURL(file);
+                        //   }
+                        // }}
                       />
                     </label>
                   </div>
