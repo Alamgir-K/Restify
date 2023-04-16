@@ -29,7 +29,7 @@ class PropertyCreateSerializer(serializers.ModelSerializer):
         # serializers works just like django forms
         model = RentalProperty
 
-        fields = ['id', 'owner_username', 'name', 'address', 'city', 'country', 'price', 'max_guests', 'beds', 'baths', 'description', 'amenities', 'images', 'uploaded_images']
+        fields = ['id', 'owner_username', 'name', 'address', 'city', 'country', 'price', 'max_guests', 'beds', 'baths', 'main_image', 'description', 'amenities', 'images', 'uploaded_images']
 
 
     def validate_amenities(self, value):

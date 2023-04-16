@@ -30,6 +30,7 @@ const SignUp = () => {
           password2: password2,
         },
         phone_number: phone,
+        is_host: false,
       });
 
       setAccessToken(response.data.access);

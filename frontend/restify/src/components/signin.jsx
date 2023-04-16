@@ -25,9 +25,9 @@ const Login = () => {
 
       // Save the tokens and handle navigation to another page or component.
       setAccessToken(response.data.access);
+      setError("");
       console.log(response.data);
-      navigate("/host-home");
-    } catch (err) {
+    } catch (error) {
       console.error("Error during sign in:", error.response.data);
       setError("Invalid credentials");
     }

@@ -16,6 +16,7 @@ class RentalProperty(models.Model):
     max_guests = models.PositiveIntegerField()
     beds = models.PositiveIntegerField()
     baths = models.PositiveIntegerField()
+    main_image = models.ImageField(upload_to='property')
     description = models.TextField()
     AMENITIES_CHOICES = (
         ('wifi', 'WiFi'),
