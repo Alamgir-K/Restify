@@ -1,33 +1,33 @@
 import React from "react";
 import NavBar from "./NavBar";
 import { useState, useEffect } from "react";
-import { fetchPropertyDetails, fetchPropertyComments, fetchPropertyRequests } from "../api";
+// import { fetchPropertyDetails, fetchPropertyComments, fetchPropertyRequests } from "../api";
 
 const HostProperty = ({ propertyId }) => {
     const [propertyDetails, setPropertyDetails] = useState(null);
     const [propertyRequests, setPropertyRequests] = useState(null);
     const [propertyComments, setPropertyComments] = useState(null);
   
-    useEffect(() => {
-      const getPropertyDetails = async () => {
-        const data = await fetchPropertyDetails(propertyId);
-        setPropertyDetails(data);
-      };
+    // useEffect(() => {
+    //   const getPropertyDetails = async () => {
+    //     const data = await fetchPropertyDetails(propertyId);
+    //     setPropertyDetails(data);
+    //   };
 
-      const getPropertyRequests = async () => {
-        const data = await fetchPropertyRequests(propertyId);
-        setPropertyRequests(data);
-      };
+    //   const getPropertyRequests = async () => {
+    //     const data = await fetchPropertyRequests(propertyId);
+    //     setPropertyRequests(data);
+    //   };
 
-      const getPropertyComments = async () => {
-        const data = await fetchPropertyComments(propertyId);
-        setPropertyComments(data);
-      };
+    //   const getPropertyComments = async () => {
+    //     const data = await fetchPropertyComments(propertyId);
+    //     setPropertyComments(data);
+    //   };
   
-      getPropertyDetails();
-      getPropertyRequests();
-      getPropertyComments();
-    }, [propertyId]);
+    //   getPropertyDetails();
+    //   getPropertyRequests();
+    //   getPropertyComments();
+    // }, [propertyId]);
 
   return (
     <div className="bg-beige h-screen">

@@ -1,28 +1,87 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './style.css';
-import 'font-awesome/css/font-awesome.min.css';
-import { fetchHostProperties, fetchHostInbox } from "../api";
+import '../css/style.css';
+// import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
+// import { fetchHostProperties, fetchHostInbox } from "../api";
 import NavBar from './NavBar';
+import AuthContext from '../AuthContext';
+import { useContext } from 'react';
 
-const HostHome = ({ hostId }) => {
+const HostHome = () => {
+  const [profile, setProfile] = useState(null);
+  const { token } = useContext(AuthContext);
   const [hostProperties, setHostProperties] = useState([]);
   const [hostInbox, setHostInbox] = useState([]);
 
   useEffect(() => {
+
+    const fetchUserProfile = async () => {
+      try {
+        const headers = { Authorization: `Bearer ${token}` };
+
+        const profileResponse = await axios.get(
+          "http://localhost:8000/api/profile/",
+          { headers }
+        );
+
+        setProfile(profileResponse.data);
+        console.log(profile.id);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     const getHostProperties = async () => {
-      const response = await fetchHostProperties(hostId);
-      setHostProperties(response.data);
+      // const response = await fetchHostProperties(hostId);
+      try {
+        const headers = { Authorization: `Bearer ${token}` };
+        const response = await axios.get(`http://localhost:8000/api/property/search/`, {
+          headers,
+          params: {
+            host: 1,
+          },
+        });
+
+        console.log(response.data);
+        setHostProperties(response.data.results);
+      } catch (err) {
+        console.error("Error during sign in:", err.data);
+      }
     };
 
-    const getHostInbox = async () => {
-      const response = await fetchHostInbox(hostId);
-      setHostInbox(response.data);
-    };
-
+    fetchUserProfile();
+    // console.log(profile.id);
     getHostProperties();
-    getHostInbox();
-  }, [hostId]);
+
+  }, [token]);
+
+  // useEffect(() => {
+  //   const getHostProperties = async () => {
+  //     // const response = await fetchHostProperties(hostId);
+  //     try {
+  //       const response = await axios.post("http://localhost:8000/api/property/search", {
+  //         username: username,
+  //         password: password,
+  //       });
+  
+  //       // Save the tokens and handle navigation to another page or component.
+  //       setAccessToken(response.data.access);
+  //       console.log(response.data);
+  //     } catch (err) {
+  //       console.error("Error during sign in:", error.response.data);
+  //       setError("Invalid credentials");
+  //     }
+  //     setHostProperties(response.data);
+  //   };
+
+  //   const getHostInbox = async () => {
+  //     const response = await fetchHostInbox(hostId);
+  //     setHostInbox(response.data);
+  //   };
+
+  //   getHostProperties();
+  //   getHostInbox();
+  // }, [hostId]);
 
   return (
     <>
@@ -33,6 +92,7 @@ const HostHome = ({ hostId }) => {
         <div className="flex flex-col h-screen">
           <div className="flex container mx-auto p-3 mt-3">
             {hostProperties.map((property) => (
+              console.log("Image URL:", property.imageUrl),
               <div key={property.id} className="w-1/4 md:w-1/5 p-3">
                 <div className="bg-white rounded shadow-lg border-2 border-transparent hover:border-red-300">
                   <img className="w-full h-48" src={property.imageUrl} alt={property.name} />
@@ -119,4 +179,6 @@ const HostHome = ({ hostId }) => {
     </>
     );
 };
+
+export default HostHome;
                

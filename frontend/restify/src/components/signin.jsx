@@ -4,11 +4,15 @@ import AuthContext from "../AuthContext";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 
+import { useNavigate } from "react-router-dom";
+
 const Login = () => {
   const { setAccessToken } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,6 +26,7 @@ const Login = () => {
       // Save the tokens and handle navigation to another page or component.
       setAccessToken(response.data.access);
       console.log(response.data);
+      navigate("/host-home");
     } catch (err) {
       console.error("Error during sign in:", error.response.data);
       setError("Invalid credentials");
