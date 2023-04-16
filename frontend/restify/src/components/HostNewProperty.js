@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import NavBar from './NavBar';
-
+import NavBar from './navbar';
 
 function NewProperty() {
   const [imageList, setImageList] = useState([]);
@@ -17,27 +16,27 @@ function NewProperty() {
   function handleTitleChange(e) {
     setTitle(e.target.value);
   }
-  
+
   function handleListedChange(e) {
     setIsListed(e.target.checked);
   }
-  
+
   function handleAddressChange(e) {
     setAddress(e.target.value);
   }
-  
+
   function handleGuestsAllowedChange(e) {
     setGuestsAllowed(e.target.value);
   }
-  
+
   function handleBedsChange(e) {
     setBeds(e.target.value);
   }
-  
+
   function handleWashroomsChange(e) {
     setWashrooms(e.target.value);
   }
-  
+
   function handleDescriptionChange(e) {
     setDescription(e.target.value);
   }
@@ -49,7 +48,7 @@ function NewProperty() {
   function handleLocationChange(e) {
     setAddress(e.target.value);
   }
-  
+
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -73,72 +72,72 @@ function NewProperty() {
         <NavBar />
 
         <div className="bg-beige h-screen">
-        <div className="container mx-auto">
-          <h1 className="font-semibold mb-6 text-3xl">New Property</h1>
-          <form className="bg-white shadow-md rounded px-6 pt-8" onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label className="block text-gray-500 mb-2" htmlFor="title">Title</label>
-              <input
-                type="text"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-500"
-                id="title"
-                placeholder="Title"
-                onChange={handleTitleChange}
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-500 mb-2">Description</label>
-              <textarea
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-500"
-                rows="5"
-                placeholder="Description"
-                onChange={handleDescriptionChange}
-              ></textarea>
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-500 mb-2" htmlFor="price">Price per night</label>
-              <input
-                type="number"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-500"
-                id="price"
-                placeholder="Price per night"
-                onChange={handlePriceChange}
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-500 mb-2" htmlFor="location">Location</label>
-              <input
-                type="text"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-500"
-                id="location"
-                placeholder="Location"
-                onChange={handleLocationChange}
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-500 mb-2" htmlFor="imageUrl">Image URL</label>
-              <input
-                type="text"
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-500"
-                id="imageUrl"
-                placeholder="Image URL"
-                onChange={handleImageUpload}
-              />
-            </div>
-            <div className="flex items-center justify-between">
-              <button
-                className="text-white font-medium button-normal py-2 px-4 rounded"
-                type="submit"
-              >
-                Save
-              </button>
-              <a className="text-blue-500 text-sm hover:text-blue-800" href="host_property.html">
-                Cancel
-              </a>
-            </div>
-          </form>
+          <div className="container mx-auto">
+            <h1 className="font-semibold mb-6 text-3xl">New Property</h1>
+            <form className="bg-white shadow-md rounded px-6 pt-8" onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <label className="block text-gray-500 mb-2" htmlFor="title">Title</label>
+                <input
+                  type="text"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-500"
+                  id="title"
+                  placeholder="Title"
+                  onChange={handleTitleChange}
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-500 mb-2">Description</label>
+                <textarea
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-500"
+                  rows="5"
+                  placeholder="Description"
+                  onChange={handleDescriptionChange}
+                ></textarea>
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-500 mb-2" htmlFor="price">Price per night</label>
+                <input
+                  type="number"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-500"
+                  id="price"
+                  placeholder="Price per night"
+                  onChange={handlePriceChange}
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-500 mb-2" htmlFor="location">Location</label>
+                <input
+                  type="text"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-500"
+                  id="location"
+                  placeholder="Location"
+                  onChange={handleLocationChange}
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-500 mb-2" htmlFor="imageUrl">Image URL</label>
+                <input
+                  type="text"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-500"
+                  id="imageUrl"
+                  placeholder="Image URL"
+                  onChange={handleImageUpload}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <button
+                  className="text-white font-medium button-normal py-2 px-4 rounded"
+                  type="submit"
+                >
+                  Save
+                </button>
+                <a className="text-blue-500 text-sm hover:text-blue-800" href="host_property.html">
+                  Cancel
+                </a>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
       </div>
     </>
   );

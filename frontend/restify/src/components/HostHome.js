@@ -3,7 +3,7 @@ import axios from 'axios';
 import '../css/style.css';
 // import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
 // import { fetchHostProperties, fetchHostInbox } from "../api";
-import NavBar from './NavBar';
+import NavBar from './navbar';
 import AuthContext from '../AuthContext';
 import { useContext } from 'react';
 
@@ -87,7 +87,7 @@ const HostHome = () => {
   //         username: username,
   //         password: password,
   //       });
-  
+
   //       // Save the tokens and handle navigation to another page or component.
   //       setAccessToken(response.data.access);
   //       console.log(response.data);
@@ -144,7 +144,7 @@ const HostHome = () => {
               <button
                 class="mx-1 px-3 py-1 rounded border"
                 onClick={() => handlePageChange(currentPage + 1)}
-                // disabled={currentPage * count > count}
+              // disabled={currentPage * count > count}
               >
                 Next
               </button>
@@ -186,39 +186,39 @@ const HostHome = () => {
                 )}
                 {/* Render stay request inbox items */}
                 {inboxItem.status === 'Pending' && (
-                    <div className="p-4 bg-gray-300 rounded-lg mt-4">
+                  <div className="p-4 bg-gray-300 rounded-lg mt-4">
                     <table className="w-full text-left table-auto">
-                        <thead>
+                      <thead>
                         <tr>
-                            <th className="px-4 py-3">Property</th>
-                            <th className="px-4 py-3">Stay Request</th>
-                            <th className="px-4 py-3">Guests</th>
-                            <th className="px-4 py-3">Dates</th>
+                          <th className="px-4 py-3">Property</th>
+                          <th className="px-4 py-3">Stay Request</th>
+                          <th className="px-4 py-3">Guests</th>
+                          <th className="px-4 py-3">Dates</th>
                         </tr>
-                        </thead>
-                        <tbody>
+                      </thead>
+                      <tbody>
                         <tr>
-                            <td className="border px-4 py-3">{inboxItem.property}</td>
-                            <td className="border px-4 py-3">{inboxItem.message}</td>
-                            <td className="border px-4 py-3">{inboxItem.guest}</td>
-                            <td className="border px-4 py-3">
+                          <td className="border px-4 py-3">{inboxItem.property}</td>
+                          <td className="border px-4 py-3">{inboxItem.message}</td>
+                          <td className="border px-4 py-3">{inboxItem.guest}</td>
+                          <td className="border px-4 py-3">
                             {inboxItem.dates}{' '}
                             <button className="bg-blue-500 rounded-full py-2 px-3 text-white">Approve</button>{' '}
                             <button className="bg-red-500 rounded-full py-2 px-3 text-white">Deny</button>
-                            </td>
+                          </td>
                         </tr>
-                        </tbody>
+                      </tbody>
                     </table>
-                    </div>
+                  </div>
                 )}
-                </div>
+              </div>
             ))}
-            </div>
+          </div>
         </div>
-        </div>
+      </div>
     </>
-    );
+  );
 };
 
 export default HostHome;
-               
+
