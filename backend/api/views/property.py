@@ -103,6 +103,10 @@ class PropertySearchView(ListAPIView):
     def get_queryset(self):
         queryset = RentalProperty.objects.all()
 
+        host = self.request.query_params.get('host')
+        if host:
+            queryset = queryset.filter(owner=host)
+
         max_guests = self.request.query_params.get('max_guests')
         if max_guests:
             queryset = queryset.filter(max_guests__gte=max_guests)
