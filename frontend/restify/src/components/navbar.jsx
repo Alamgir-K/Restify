@@ -1,9 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Notifications from "./notifications";
+import { useState } from "react";
 
 // Need to convert a tags into Link tags
 
 const NavBar = () => {
+  const [hidden, setHidden] = useState(true);
+
+  const toggleHidden = () => {
+    setHidden(!hidden);
+  };
+
   return (
     <header className="bg-[#fbf8f0]">
       <div class="container mx-auto p-4">
@@ -47,12 +55,13 @@ const NavBar = () => {
               </a>
             </div>
             <div class="mx-2 sm:mx-4">
-              <a href="notifications.html">
+              <span onClick={toggleHidden}>
                 <img
                   class="h-7 w-7 overflow-hidden rounded-full"
                   src="/images/bell-svgrepo-com.svg"
                 />
-              </a>
+              </span>
+              <Notifications hidden={hidden} />
             </div>
             <div class="mx-2 sm:mx-4">
               <a href="profile.html">

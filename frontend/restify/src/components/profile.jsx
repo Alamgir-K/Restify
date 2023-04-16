@@ -14,7 +14,6 @@ const UserProfile = () => {
     const fetchUserProfile = async () => {
       try {
         const headers = { Authorization: `Bearer ${token}` };
-        console.log(headers);
 
         const profileResponse = await axios.get(
           "http://localhost:8000/api/profile/",
@@ -22,7 +21,6 @@ const UserProfile = () => {
         );
 
         setProfile(profileResponse.data);
-        console.log(profileResponse.data);
 
         const ratingsResponse = await axios.get(
           `http://localhost:8000/api/rating/${profileResponse.data.id}/view/`,
@@ -30,7 +28,6 @@ const UserProfile = () => {
         );
 
         setRatings(ratingsResponse.data.results);
-        console.log(ratingsResponse.data);
       } catch (error) {
         console.error(error);
       }
