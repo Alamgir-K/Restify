@@ -64,12 +64,18 @@ const NavBar = () => {
               <Notifications hidden={hidden} />
             </div>
             <div class="mx-2 sm:mx-4">
-              <a href="profile.html">
+              <Link to="/profile" className="">
                 <img
                   class="h-7 w-7 overflow-hidden rounded-full"
                   src="/images/user-svgrepo-com.svg"
                 />
-              </a>
+              </Link>
+              {/* <a href="profile.html">
+                <img
+                  class="h-7 w-7 overflow-hidden rounded-full"
+                  src="/images/user-svgrepo-com.svg"
+                />
+              </a> */}
             </div>
           </div>
         </nav>
