@@ -224,11 +224,12 @@ const HostProperty = () => {
                             </div>
                         ))}
                     </div>
-                 ))}
-            </div>
-        </div>
-                  </div>
-    </div> 
+              </div>
+            ))}
+          </div>
+      </div> 
+    </div>
+    </div>
   );
 };
 

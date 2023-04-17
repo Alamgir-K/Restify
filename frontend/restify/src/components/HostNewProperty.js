@@ -102,7 +102,6 @@ const handleFileChange = (e) => {
 
   return (
     <>
-
       <div className="bg-beige h-screen">
 
         <NavBar />
@@ -231,6 +230,7 @@ const handleFileChange = (e) => {
             </div>
           </form>
         </div>
+      </div>
       </div>
     </>
   );

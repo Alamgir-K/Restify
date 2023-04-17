@@ -91,9 +91,12 @@ useEffect(() => {
         },
       });
       setHostInbox(response.data.results);
+      console.log("updated");
     } catch (err) {
       console.error("Error during get inbox", err.data);
     }
+
+    // window.location.reload();
   };
 
   return (
@@ -133,7 +136,7 @@ useEffect(() => {
               </button>
               <button
                 class="mx-1 px-3 py-1 rounded border"
-                onClick={() => handlePageChange(currentPage + 1)}
+                onClick={() => setCurrentPage(currentPage + 1)}
               // disabled={currentPage * count > count}
               >
                 Next
@@ -217,7 +220,6 @@ useEffect(() => {
             </div>
         </div>
         </div>
-      </div>
     </>
   );
 };

@@ -4,7 +4,6 @@ import axios from "axios";
 import { useContext } from "react";
 import NavBar from "./navbar";
 import { Link } from "react-router-dom";
-import NavBar from "./navbar";
 
 const UserProfile = () => {
   const [profile, setProfile] = useState(null);
