@@ -4,11 +4,13 @@ import axios from "axios";
 import { useContext } from "react";
 import NavBar from "./navbar";
 import { Link } from "react-router-dom";
+import NavBar from "./navbar";
 
 const UserProfile = () => {
   const [profile, setProfile] = useState(null);
   const [ratings, setRatings] = useState([]);
   const { token } = useContext(AuthContext);
+  const [imageUrl, setImageUrl] = useState("");
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -21,6 +23,7 @@ const UserProfile = () => {
         );
 
         setProfile(profileResponse.data);
+        setImageUrl(profileResponse.data.avatar);
 
         const ratingsResponse = await axios.get(
           `http://localhost:8000/api/rating/${profileResponse.data.id}/view/`,
@@ -28,6 +31,7 @@ const UserProfile = () => {
         );
 
         setRatings(ratingsResponse.data.results);
+        console.log(profileResponse.data.avatar);
       } catch (error) {
         console.error(error);
       }
@@ -38,6 +42,11 @@ const UserProfile = () => {
     // }
     // fetchUserProfile();
   }, [token]);
+
+  //   let imageUrl;
+  //   if (profile.avatar) {
+  //     imageUrl = URL.createObjectURL(profile.avatar);
+  //   }
 
   if (!profile) {
     return <div>Loading...</div>;
@@ -55,7 +64,7 @@ const UserProfile = () => {
             <div className="px-4 py-4">
               <div className="text-center">
                 <span className="inline-block h-24 w-24 overflow-hidden rounded-full bg-[#fbf8f0] md:h-40 md:w-40">
-                  <img src={`${profile.user.avatar}`} />
+                  <img src={imageUrl} />
                 </span>
               </div>
 
@@ -106,11 +115,6 @@ const UserProfile = () => {
               {/* <!-- Name Tag Div --> */}
               <div>
                 <p className="text-3xl font-medium">{`Hi, I'm ${profile.user.first_name}`}</p>
-                {/* <a href="edit_profile.html">
-                  <p className="mt-2 text-sm font-medium underline">
-                    Edit Profile
-                  </p>
-                </a> */}
                 <Link
                   to="/profile/edit"
                   className="mt-2 text-sm font-medium underline"

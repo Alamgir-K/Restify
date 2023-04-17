@@ -21,27 +21,27 @@ function NewProperty() {
   function handleTitleChange(e) {
     setTitle(e.target.value);
   }
-  
+
   function handleListedChange(e) {
     setIsListed(e.target.checked);
   }
-  
+
   function handleAddressChange(e) {
     setAddress(e.target.value);
   }
-  
+
   function handleGuestsAllowedChange(e) {
     setGuestsAllowed(e.target.value);
   }
-  
+
   function handleBedsChange(e) {
     setBeds(e.target.value);
   }
-  
+
   function handleWashroomsChange(e) {
     setWashrooms(e.target.value);
   }
-  
+
   function handleDescriptionChange(e) {
     setDescription(e.target.value);
   }
@@ -53,7 +53,7 @@ function NewProperty() {
   function handleLocationChange(e) {
     setAddress(e.target.value);
   }
-  
+
 
   const handleImageUpload = (e) => {
     const newUrl = 'https://via.placeholder.com/400x300?text=' + Math.floor(Math.random() * 1000);
@@ -231,7 +231,6 @@ const handleFileChange = (e) => {
             </div>
           </form>
         </div>
-      </div>
       </div>
     </>
   );
