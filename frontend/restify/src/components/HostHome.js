@@ -3,7 +3,7 @@ import axios from 'axios';
 import '../css/style.css';
 // import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
 // import { fetchHostProperties, fetchHostInbox } from "../api";
-import NavBar from './NavBar';
+import NavBar from './navbar';
 import AuthContext from '../AuthContext';
 import { useContext } from 'react';
 import { Navigate, Link } from 'react-router-dom';

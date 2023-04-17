@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import AuthContext from "../AuthContext";
 import axios from "axios";
 import { useContext } from "react";
-import NavBar from "./NavBar";
+import NavBar from "./navbar";
 import { Link } from "react-router-dom";
 
 const EditProfile = () => {

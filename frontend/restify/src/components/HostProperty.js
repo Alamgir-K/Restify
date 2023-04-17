@@ -1,5 +1,5 @@
 import React from "react";
-import NavBar from "./NavBar";
+import NavBar from "./navbar";
 import { useState, useEffect } from "react";
 import { useParams, useLocation } from 'react-router-dom';
 import AuthContext from '../AuthContext';
