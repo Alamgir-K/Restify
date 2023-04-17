@@ -1,33 +1,77 @@
 import React from "react";
 import NavBar from "./NavBar";
 import { useState, useEffect } from "react";
-// import { fetchPropertyDetails, fetchPropertyComments, fetchPropertyRequests } from "../api";
+import { useParams, useLocation } from 'react-router-dom';
+import AuthContext from '../AuthContext';
+import { useContext } from 'react';
+import axios from 'axios';
 
-const HostProperty = ({ propertyId }) => {
+const HostProperty = () => {
+    const { id } = useParams();
     const [propertyDetails, setPropertyDetails] = useState(null);
     const [propertyRequests, setPropertyRequests] = useState(null);
     const [propertyComments, setPropertyComments] = useState(null);
+    const [propertyPage, setPropertyPage] = useState(1);
+    const [requestsPage, setRequestsPage] = useState(1);
+    const [commentsPage, setCommentsPage] = useState(1);
+    const [profile, setProfile] = useState(null);
+    const { token } = useContext(AuthContext);
   
-    // useEffect(() => {
-    //   const getPropertyDetails = async () => {
-    //     const data = await fetchPropertyDetails(propertyId);
-    //     setPropertyDetails(data);
-    //   };
+    useEffect(() => {
 
-    //   const getPropertyRequests = async () => {
-    //     const data = await fetchPropertyRequests(propertyId);
-    //     setPropertyRequests(data);
-    //   };
+      getPropertyDetails();
+      getPropertyRequests();
+      getPropertyComments();
 
-    //   const getPropertyComments = async () => {
-    //     const data = await fetchPropertyComments(propertyId);
-    //     setPropertyComments(data);
-    //   };
-  
-    //   getPropertyDetails();
-    //   getPropertyRequests();
-    //   getPropertyComments();
-    // }, [propertyId]);
+    }, [token]);
+
+    const getPropertyRequests = async () => {
+        try {
+            const headers = { Authorization: `Bearer ${token}` };
+            const response = await axios.get(`http://localhost:8000/api/reservation/host/all/`, {
+              headers,
+              params: {
+                property: id,
+                page: requestsPage
+              },
+            });
+            setPropertyRequests(response.data.results);
+            console.log(response.data);
+          } catch (err) {
+            console.error("Error during get Reservations", err.data);
+          }
+          
+    };
+
+    const getPropertyComments = async () => {
+        try {
+            const headers = { Authorization: `Bearer ${token}` };
+            const response = await axios.get(`http://localhost:8000/api/comment/${id}/view`, {
+              headers,
+            });
+            setPropertyComments(response.data.results);
+            console.log(response.data);
+          } catch (err) {
+            console.error("Error during get comments", err.data);
+          }
+    };
+
+    const getPropertyDetails = async () => {
+        try {
+            const headers = { Authorization: `Bearer ${token}` };
+            const response = await axios.get(`http://localhost:8000/api/comment/${id}/view`, {
+              headers,
+            });
+            console.log(response.data);
+            setPropertyDetails(response.data.results);
+          } catch (err) {
+            console.error("Error during get details", err.data);
+          }
+    };
+
+    if (!propertyDetails || !propertyRequests || !propertyComments) {
+      return <div>Loading...</div>;
+    }
 
   return (
     <div className="bg-beige h-screen">
@@ -73,7 +117,7 @@ const HostProperty = ({ propertyId }) => {
 
         <div class="flex bg-white container">
 
-            {/* Upcoming Bookings Section */}
+            Upcoming Bookings Section
             <div className="flex flex-col mb-6 w-1/2 p-4">
                 <h2 className="text-2xl font-medium mb-4">Upcoming Bookings</h2>
                 <table className="w-full text-left table-auto">
@@ -113,7 +157,7 @@ const HostProperty = ({ propertyId }) => {
 
             </div>
 
-            {/* Previous Guest Comments Section */}
+            Previous Guest Comments Section
             <div className="flex flex-col w-1/2 relative pb-20 p-10">
                 <h2 className="text-2xl font-medium mb-4">Previous Guest Comments</h2>
                 {propertyComments.map((comment) => (
@@ -151,11 +195,11 @@ const HostProperty = ({ propertyId }) => {
                         </div>
                     )}
                     </div>
-                ))}
+                 ))}
             </div>
         </div>
-        </div>
-    </div>
+                  </div>
+    </div> 
   );
 };
 
