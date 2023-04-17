@@ -48,6 +48,21 @@ useEffect(() => {
   getHostInbox();
 }, [inboxCurrentPage])
 
+  function updateReservationStatus(stat, id) {
+    const headers = { Authorization: `Bearer ${token}` };
+  
+    axios
+      .put(`http://localhost:8000/api/reservation/${id}/edit/`, { status : stat }, { headers })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+      getHostInbox();
+  }
+
   const getHostProperties = async () => {
     // const response = await fetchHostProperties(hostId);
     try {
@@ -103,7 +118,9 @@ useEffect(() => {
             ))}
             <div className="w-1/5 md:w-1/5 h-45 bg-white rounded shadow-lg relative">
               <button className="absolute left-0 bottom-0 text-center text-green-500 hover:text-green-800 text-9xl plus">
-                <a href="/host_new_property">+</a>
+               <Link to={`/host-new-property`} >
+                  <p>+</p>
+              </Link>
               </button>
             </div>
             <div class="flex justify-center mt-4">
@@ -146,8 +163,33 @@ useEffect(() => {
                             <td className="border px-4 py-3">{inboxItem.guest}</td>
                             <td className="border px-4 py-3">
                             {inboxItem.dates}{' '}
-                            <button className="bg-blue-500 rounded-full py-2 px-3 text-white">Approve</button>{' '}
-                            <button className="bg-red-500 rounded-full py-2 px-3 text-white">Deny</button>
+                            <button className="bg-blue-500 rounded-full py-2 px-3 text-white" onClick={() => updateReservationStatus('Approved', inboxItem.id)}>Approve</button>{' '}
+                            <button className="bg-red-500 rounded-full py-2 px-3 text-white" onClick={() => updateReservationStatus('Denied', inboxItem.id)}>Deny</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                )}
+                {inboxItem.status === 'Approved' && (
+                    <div className="p-4 bg-gray-300 rounded-lg mt-4">
+                    <table className="w-full text-left table-auto">
+                        <thead>
+                        <tr>
+                            <th className="px-4 py-3">Property</th>
+                            <th className="px-4 py-3">Stay Request</th>
+                            <th className="px-4 py-3">Guests</th>
+                            <th className="px-4 py-3">Dates</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td className="border px-4 py-3">{inboxItem.property}</td>
+                            <td className="border px-4 py-3">{inboxItem.message}</td>
+                            <td className="border px-4 py-3">{inboxItem.guest}</td>
+                            <td className="border px-4 py-3">
+                            {inboxItem.dates}{' '}
+                            <button className="bg-gray-500 rounded-full py-2 px-3 text-white" onClick={() => updateReservationStatus('Terminated', inboxItem.id)}>Terminate</button>{' '}
                             </td>
                         </tr>
                         </tbody>
