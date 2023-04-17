@@ -1,33 +1,77 @@
 import React from "react";
-import NavBar from './navbar';
+import NavBar from "./navbar";
 import { useState, useEffect } from "react";
-// import { fetchPropertyDetails, fetchPropertyComments, fetchPropertyRequests } from "../api";
+import { useParams, useLocation } from 'react-router-dom';
+import AuthContext from '../AuthContext';
+import { useContext } from 'react';
+import axios from 'axios';
 
-const HostProperty = ({ propertyId }) => {
+const HostProperty = () => {
+    const { id } = useParams();
     const [propertyDetails, setPropertyDetails] = useState(null);
     const [propertyRequests, setPropertyRequests] = useState(null);
     const [propertyComments, setPropertyComments] = useState(null);
+    const [propertyPage, setPropertyPage] = useState(1);
+    const [requestsPage, setRequestsPage] = useState(1);
+    const [commentsPage, setCommentsPage] = useState(1);
+    const [profile, setProfile] = useState(null);
+    const { token } = useContext(AuthContext);
+  
+    useEffect(() => {
 
-    // useEffect(() => {
-    //   const getPropertyDetails = async () => {
-    //     const data = await fetchPropertyDetails(propertyId);
-    //     setPropertyDetails(data);
-    //   };
+      getPropertyDetails();
+      getPropertyRequests();
+      getPropertyComments();
 
-    //   const getPropertyRequests = async () => {
-    //     const data = await fetchPropertyRequests(propertyId);
-    //     setPropertyRequests(data);
-    //   };
+    }, [token]);
 
-    //   const getPropertyComments = async () => {
-    //     const data = await fetchPropertyComments(propertyId);
-    //     setPropertyComments(data);
-    //   };
+    const getPropertyRequests = async () => {
+        try {
+            const headers = { Authorization: `Bearer ${token}` };
+            const response = await axios.get(`http://localhost:8000/api/reservation/host/all/`, {
+              headers,
+              params: {
+                property: id,
+                page: requestsPage
+              },
+            });
+            setPropertyRequests(response.data.results);
+            console.log(response.data);
+          } catch (err) {
+            console.error("Error during get Reservations", err.data);
+          }
+          
+    };
 
-    //   getPropertyDetails();
-    //   getPropertyRequests();
-    //   getPropertyComments();
-    // }, [propertyId]);
+    const getPropertyComments = async () => {
+        try {
+            const headers = { Authorization: `Bearer ${token}` };
+            const response = await axios.get(`http://localhost:8000/api/comment/${id}/view`, {
+              headers,
+            });
+            setPropertyComments(response.data.results);
+            console.log(response.data);
+          } catch (err) {
+            console.error("Error during get comments", err.data);
+          }
+    };
+
+    const getPropertyDetails = async () => {
+        try {
+            const headers = { Authorization: `Bearer ${token}` };
+            const response = await axios.get(`http://localhost:8000/api/comment/${id}/view`, {
+              headers,
+            });
+            console.log(response.data);
+            setPropertyDetails(response.data.results);
+          } catch (err) {
+            console.error("Error during get details", err.data);
+          }
+    };
+
+    if (!propertyDetails || !propertyRequests || !propertyComments) {
+      return <div>Loading...</div>;
+    }
 
     return (
         <div className="bg-beige h-screen">
@@ -72,45 +116,71 @@ const HostProperty = ({ propertyId }) => {
                 }
 
                 <div class="flex bg-white container">
+            Upcoming Bookings Section
+            <div className="flex flex-col mb-6 w-1/2 p-4">
+                <h2 className="text-2xl font-medium mb-4">Upcoming Bookings</h2>
+                <table className="w-full text-left table-auto">
+                    <thead>
+                    <tr>
+                        <th className="px-3 py-2">User</th>
+                        <th className="px-3 py-2">Guests</th>
+                        <th className="px-3 py-2">Dates</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {propertyRequests.map((request) => (
+                        <tr key={request.id} className={request.approved ? "bg-blue-200" : ""}>
+                        <td className="px-3 py-2 border">{request.userName}</td>
+                        <td className="px-3 py-2 border">{request.guests}</td>
+                        <td className="px-3 py-2 border">
+                            {request.startDate} - {request.endDate}
+                            {request.approved ? (
+                            <button className="button-normal px-2 py-3 text-white rounded-full">
+                                Cancel
+                            </button>
+                            ) : (
+                            <>
+                                <button className="bg-blue-500 px-2 py-3 text-white rounded-full">
+                                Approve
+                                </button>
+                                <button className="bg-red-500 px-2 py-3 text-white rounded-full">
+                                Deny
+                                </button>
+                            </>
+                            )}
+                        </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
 
-                    {/* Upcoming Bookings Section */}
-                    <div className="flex flex-col mb-6 w-1/2 p-4">
-                        <h2 className="text-2xl font-medium mb-4">Upcoming Bookings</h2>
-                        <table className="w-full text-left table-auto">
-                            <thead>
-                                <tr>
-                                    <th className="px-3 py-2">User</th>
-                                    <th className="px-3 py-2">Guests</th>
-                                    <th className="px-3 py-2">Dates</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {propertyRequests.map((request) => (
-                                    <tr key={request.id} className={request.approved ? "bg-blue-200" : ""}>
-                                        <td className="px-3 py-2 border">{request.userName}</td>
-                                        <td className="px-3 py-2 border">{request.guests}</td>
-                                        <td className="px-3 py-2 border">
-                                            {request.startDate} - {request.endDate}
-                                            {request.approved ? (
-                                                <button className="button-normal px-2 py-3 text-white rounded-full">
-                                                    Cancel
-                                                </button>
-                                            ) : (
-                                                <>
-                                                    <button className="bg-blue-500 px-2 py-3 text-white rounded-full">
-                                                        Approve
-                                                    </button>
-                                                    <button className="bg-red-500 px-2 py-3 text-white rounded-full">
-                                                        Deny
-                                                    </button>
-                                                </>
-                                            )}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+            </div>
 
+            Previous Guest Comments Section
+            <div className="flex flex-col w-1/2 relative pb-20 p-10">
+                <h2 className="text-2xl font-medium mb-4">Previous Guest Comments</h2>
+                {propertyComments.map((comment) => (
+                    <div key={comment.id}>
+                    <div className="mb-2 bg-gray-200 p-2 rounded">
+                        <p className="font-medium mb-2">{comment.guestName}:</p>
+                        <div className="absolute right-10">
+                        {Array(comment.rating)
+                            .fill()
+                            .map((_, i) => (
+                            <span key={i} className="fa fa-star checked"></span>
+                            ))}
+                        {Array(5 - comment.rating)
+                            .fill()
+                            .map((_, i) => (
+                            <span key={i} className="fa fa-star"></span>
+                            ))}
+                        </div>
+                        <p className="font-medium mb-2">
+                        {comment.message1}{" "}
+                        <button className="button-normal text-white rounded-full py-2 px-4">
+                            Reply
+                        </button>
+                        </p>
                     </div>
 
                     {/* Previous Guest Comments Section */}
@@ -153,10 +223,12 @@ const HostProperty = ({ propertyId }) => {
                             </div>
                         ))}
                     </div>
-                </div>
+                 ))}
             </div>
         </div>
-    );
+                  </div>
+    </div> 
+  );
 };
 
 export default HostProperty;
