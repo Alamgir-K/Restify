@@ -2,14 +2,24 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Notifications from "./notifications";
 import { useState } from "react";
+import { useContext } from "react";
+import AuthContext from "../AuthContext";
+import { useNavigate } from "react-router-dom";
 
 // Need to convert a tags into Link tags
 
 const NavBar = () => {
   const [hidden, setHidden] = useState(true);
+  const { clearAccessToken } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const toggleHidden = () => {
     setHidden(!hidden);
+  };
+
+  const handleLogout = () => {
+    clearAccessToken();
+    navigate("/login");
   };
 
   return (
@@ -17,13 +27,16 @@ const NavBar = () => {
       <div class="container mx-auto p-4">
         <nav class="flex justify-between items-center">
           <div>
-            <a href="index.html">
+            <Link to="/" className="">
               <p class="text-xl md:text-2xl font-semibold">Restify</p>
-            </a>
+            </Link>
+            {/* <a href="index.html">
+              <p class="text-xl md:text-2xl font-semibold">Restify</p>
+            </a> */}
           </div>
           <div class="flex justify-between">
             <div class="mx-2 sm:mx-4">
-              <a href="index.html">
+              <a onClick={handleLogout}>
                 <img
                   class="h-7 w-7 overflow-hidden rounded-full"
                   src="/images/log-out-svgrepo-com.svg"

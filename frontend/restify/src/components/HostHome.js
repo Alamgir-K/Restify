@@ -133,8 +133,8 @@ useEffect(() => {
               </button>
               <button
                 class="mx-1 px-3 py-1 rounded border"
-                onClick={() => setCurrentPage(currentPage + 1)}
-                disabled={currentPage * 4 >= maxPages}
+                onClick={() => handlePageChange(currentPage + 1)}
+              // disabled={currentPage * count > count}
               >
                 Next
               </button>
@@ -146,22 +146,22 @@ useEffect(() => {
               <div key={inboxItem.id}>
                 {/* Render stay request inbox items */}
                 {inboxItem.status === 'Pending' && (
-                    <div className="p-4 bg-gray-300 rounded-lg mt-4">
+                  <div className="p-4 bg-gray-300 rounded-lg mt-4">
                     <table className="w-full text-left table-auto">
-                        <thead>
+                      <thead>
                         <tr>
-                            <th className="px-4 py-3">Property</th>
-                            <th className="px-4 py-3">Stay Request</th>
-                            <th className="px-4 py-3">Guests</th>
-                            <th className="px-4 py-3">Dates</th>
+                          <th className="px-4 py-3">Property</th>
+                          <th className="px-4 py-3">Stay Request</th>
+                          <th className="px-4 py-3">Guests</th>
+                          <th className="px-4 py-3">Dates</th>
                         </tr>
-                        </thead>
-                        <tbody>
+                      </thead>
+                      <tbody>
                         <tr>
-                            <td className="border px-4 py-3">{inboxItem.property}</td>
-                            <td className="border px-4 py-3">{inboxItem.message}</td>
-                            <td className="border px-4 py-3">{inboxItem.guest}</td>
-                            <td className="border px-4 py-3">
+                          <td className="border px-4 py-3">{inboxItem.property}</td>
+                          <td className="border px-4 py-3">{inboxItem.message}</td>
+                          <td className="border px-4 py-3">{inboxItem.guest}</td>
+                          <td className="border px-4 py-3">
                             {inboxItem.dates}{' '}
                             <button className="bg-blue-500 rounded-full py-2 px-3 text-white" onClick={() => updateReservationStatus('Approved', inboxItem.id)}>Approve</button>{' '}
                             <button className="bg-red-500 rounded-full py-2 px-3 text-white" onClick={() => updateReservationStatus('Denied', inboxItem.id)}>Deny</button>
@@ -192,11 +192,11 @@ useEffect(() => {
                             <button className="bg-gray-500 rounded-full py-2 px-3 text-white" onClick={() => updateReservationStatus('Terminated', inboxItem.id)}>Terminate</button>{' '}
                             </td>
                         </tr>
-                        </tbody>
+                      </tbody>
                     </table>
-                    </div>
+                  </div>
                 )}
-                </div>
+              </div>
             ))}
             <div class="flex justify-center mt-4">
               <button
@@ -217,9 +217,10 @@ useEffect(() => {
             </div>
         </div>
         </div>
+      </div>
     </>
-    );
+  );
 };
 
 export default HostHome;
-               
+
