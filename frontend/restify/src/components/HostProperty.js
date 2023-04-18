@@ -43,6 +43,22 @@ const HostProperty = () => {
           
     };
 
+    function updateReservationStatus(stat, id) {
+        const headers = { Authorization: `Bearer ${token}` };
+      
+        axios
+          .put(`http://localhost:8000/api/reservation/${id}/edit/`, { status : stat }, { headers })
+          .then((response) => {
+            console.log(response.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+    
+          getPropertyRequests();
+          window.location.reload();
+      }
+
     const getPropertyComments = async () => {
         try {
             const headers = { Authorization: `Bearer ${token}` };
@@ -117,7 +133,6 @@ const HostProperty = () => {
 
                 <div class="flex bg-white container">
 
-            Upcoming Bookings Section
             <div className="flex flex-col mb-6 w-1/2 p-4">
                 <h2 className="text-2xl font-medium mb-4">Upcoming Bookings</h2>
                 <table className="w-full text-left table-auto">
@@ -130,21 +145,21 @@ const HostProperty = () => {
                     </thead>
                     <tbody>
                     {propertyRequests.map((request) => (
-                        <tr key={request.id} className={request.approved ? "bg-blue-200" : ""}>
-                        <td className="px-3 py-2 border">{request.userName}</td>
-                        <td className="px-3 py-2 border">{request.guests}</td>
+                        <tr key={request.id} className={request.status === 'Approved' ? "bg-blue-200" : ""}>
+                        <td className="px-3 py-2 border">{request.user_id}</td>
+                        <td className="px-3 py-2 border">{request.guest}</td>
                         <td className="px-3 py-2 border">
-                            {request.startDate} - {request.endDate}
-                            {request.approved ? (
-                            <button className="button-normal px-2 py-3 text-white rounded-full">
-                                Cancel
+                            {request.start_date} - {request.end_date}{"  -  "}
+                            {request.status === 'Approved' ? (
+                            <button className="button-normal px-2 py-3 text-white rounded-full" onClick={() => updateReservationStatus('Terminated', request.id)}>
+                                Terminate
                             </button>
                             ) : (
                             <>
-                                <button className="bg-blue-500 px-2 py-3 text-white rounded-full">
+                                <button className="bg-blue-500 px-2 py-3 text-white rounded-full" onClick={() => updateReservationStatus('Approved', request.id)}>
                                 Approve
                                 </button>
-                                <button className="bg-red-500 px-2 py-3 text-white rounded-full">
+                                <button className="bg-red-500 px-2 py-3 text-white rounded-full" onClick={() => updateReservationStatus('Denied', request.id)}>
                                 Deny
                                 </button>
                             </>
@@ -157,72 +172,29 @@ const HostProperty = () => {
 
             </div>
 
-            Previous Guest Comments Section
             <div className="flex flex-col w-1/2 relative pb-20 p-10">
                 <h2 className="text-2xl font-medium mb-4">Previous Guest Comments</h2>
                 {propertyComments.map((comment) => (
                     <div key={comment.id}>
                     <div className="mb-2 bg-gray-200 p-2 rounded">
-                        <p className="font-medium mb-2">{comment.guestName}:</p>
-                        <div className="absolute right-10">
-                        {Array(comment.rating)
+                        <p className="font-medium mb-2">{comment.user}</p>
+                        {Array(comment.Rating)
                             .fill()
                             .map((_, i) => (
                             <span key={i} className="fa fa-star checked"></span>
-                            ))}
-                        {Array(5 - comment.rating)
+                            ))
+                            }
+                        {Array(5 - comment.Rating)
                             .fill()
                             .map((_, i) => (
                             <span key={i} className="fa fa-star"></span>
                             ))}
-                        </div>
                         <p className="font-medium mb-2">
-                        {comment.message1}{" "}
+                        {comment.comment}{" "}
                         <button className="button-normal text-white rounded-full py-2 px-4">
                             Reply
                         </button>
                         </p>
-                    </div>
-
-                    {/* Previous Guest Comments Section */}
-                    <div className="flex flex-col w-1/2 relative pb-20 p-10">
-                        <h2 className="text-2xl font-medium mb-4">Previous Guest Comments</h2>
-                        {propertyComments.map((comment) => (
-                            <div key={comment.id}>
-                                <div className="mb-2 bg-gray-200 p-2 rounded">
-                                    <p className="font-medium mb-2">{comment.guestName}:</p>
-                                    <div className="absolute right-10">
-                                        {Array(comment.rating)
-                                            .fill()
-                                            .map((_, i) => (
-                                                <span key={i} className="fa fa-star checked"></span>
-                                            ))}
-                                        {Array(5 - comment.rating)
-                                            .fill()
-                                            .map((_, i) => (
-                                                <span key={i} className="fa fa-star"></span>
-                                            ))}
-                                    </div>
-                                    <p className="font-medium mb-2">
-                                        {comment.message1}{" "}
-                                        <button className="button-normal text-white rounded-full py-2 px-4">
-                                            Reply
-                                        </button>
-                                    </p>
-                                </div>
-                                {comment.message2 && (
-                                    <div className="p-4 mt-4 bg-gray-200 rounded">
-                                        <p className="font-medium mb-2">{comment.hostName}:</p>
-                                        <p className="font-medium mb-2">{comment.message2}</p>
-                                    </div>
-                                )}
-                                {comment.message3 && (
-                                    <div className="w-2/3 light-theme rounded p-4">
-                                        <p className="font-medium mb-2">{comment.hostName}: {comment.message3}</p>
-                                    </div>
-                                )}
-                            </div>
-                        ))}
                     </div>
               </div>
             ))}

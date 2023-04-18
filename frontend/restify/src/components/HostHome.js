@@ -92,12 +92,10 @@ useEffect(() => {
         },
       });
       setHostInbox(response.data.results);
-      console.log("updated");
+      setInboxMaxPages(response.data.count);
     } catch (err) {
       console.error("Error during get inbox", err.data);
     }
-
-    // window.location.reload();
   };
 
   return (
@@ -138,7 +136,7 @@ useEffect(() => {
               <button
                 class="mx-1 px-3 py-1 rounded border"
                 onClick={() => setCurrentPage(currentPage + 1)}
-              // disabled={currentPage * count > count}
+              disabled={currentPage * 4 > maxPages}
               >
                 Next
               </button>
