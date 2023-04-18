@@ -25,6 +25,34 @@ class CustomUserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
+        # user_data = validated_data['user']
+
+        # if User.objects.filter(username=user_data.get('username', '')):
+        #     raise serializers.ValidationError(
+        #         {"username": "A user with this username already exists"})
+        # elif user_data.get('password', '') != user_data.get('password2', ''):
+        #     raise serializers.ValidationError(
+        #         {"password2": "The passwords do not match"})
+
+        # user_object = User.objects.create(
+        #     username=user_data.get('username', ''),
+        #     email=user_data.get('email', ''),
+        #     first_name=user_data.get('first_name', ''),
+        #     last_name=user_data.get('last_name', '')
+        # )
+        # user_object.set_password(user_data.get('password', ''))
+        # user = user_object.custom_user
+
+        # user.phone_number = validated_data.get('phone_number', '')
+
+        # if validated_data.get('avatar', ''):
+        #     user.avatar = validated_data['avatar']
+        # user.is_host = validated_data.get('is_host', '')
+
+        # user_object.save()
+
+        # return user_object.custom_user
+
         user_data = validated_data['user']
 
         if User.objects.filter(username=user_data.get('username', '')):
@@ -41,16 +69,17 @@ class CustomUserSerializer(serializers.ModelSerializer):
             last_name=user_data.get('last_name', '')
         )
         user_object.set_password(user_data.get('password', ''))
-        user = user_object.custom_user
+        user_object.save()  # Save the user object to create the related CustomUser object
 
-        user.phone_number = validated_data.get('phone_number', '')
+        custom_user = user_object.custom_user
+        custom_user.phone_number = validated_data.get('phone_number', '')
 
         if validated_data.get('avatar', ''):
-            user.avatar = validated_data['avatar']
-        user.is_host = validated_data.get('is_host', '')
+            custom_user.avatar = validated_data['avatar']
+        custom_user.is_host = validated_data.get('is_host', '')
 
-        user_object.save()
-        return user_object.custom_user
+        custom_user.save()
+        return custom_user
 
     def update(self, instance, validated_data):
         user_data = validated_data['user']
