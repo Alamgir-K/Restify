@@ -61,6 +61,7 @@ useEffect(() => {
       });
 
       getHostInbox();
+      window.location.reload();
   }
 
   const getHostProperties = async () => {

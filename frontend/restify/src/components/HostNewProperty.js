@@ -54,11 +54,10 @@ function NewProperty() {
     setAddress(e.target.value);
   }
 
-
-  const handleImageUpload = (e) => {
-    const newUrl = 'https://via.placeholder.com/400x300?text=' + Math.floor(Math.random() * 1000);
-    setImageList([...imageList, newUrl]);
+  const removeImage = (index) => {
+    setImageList((prevImageList) => prevImageList.filter((_, i) => i !== index));
   };
+  
 
 const handleFileChange = (e) => {
   const file = e.target.files[0];
@@ -143,6 +142,12 @@ const handleFileChange = (e) => {
             {imageList.map((url, index) => (
               <div key={index} className="relative w-64 h-64 mr-4 mb-4">
                 <img src={url} alt={`House Image ${index}`} />
+                <button
+                  className="absolute top-0 right-0 text-red-500 hover:text-red-800 text-2xl p-2"
+                  onClick={() => removeImage(index)}
+                >
+                  ×
+                </button>
               </div>
             ))}
           <div className="relative w-64 h-64 mr-4 mb-4">
