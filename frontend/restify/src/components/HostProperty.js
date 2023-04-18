@@ -14,6 +14,8 @@ const HostProperty = () => {
     const [propertyPage, setPropertyPage] = useState(1);
     const [requestsPage, setRequestsPage] = useState(1);
     const [commentsPage, setCommentsPage] = useState(1);
+    const [replyVisible, setReplyVisible] = useState(null);
+    const [replyText, setReplyText] = useState('');
     const [profile, setProfile] = useState(null);
     const { token } = useContext(AuthContext);
   
@@ -24,6 +26,31 @@ const HostProperty = () => {
       getPropertyComments();
 
     }, [token]);
+
+    const toggleReply = (commentId) => {
+        if (replyVisible === commentId) {
+          setReplyVisible(null);
+        } else {
+          setReplyVisible(commentId);
+        }
+    };
+
+    const submitReply = async (commentId) => {
+        try {
+        console.log("anyyything");
+          const headers = { Authorization: `Bearer ${token}` };
+          const response = await axios.put(`http://localhost:8000/api/comment/${commentId}/update/`, { message: replyText }, { headers });
+          console.log(response.data);
+          setReplyVisible(null);
+          setReplyText('');
+          getPropertyComments(); // Refresh the comments after submitting the reply
+          window.location.reload();
+        } catch (err) {
+          console.error("Error during reply submission", err.response.data);
+        }
+    };
+      
+      
 
     const getPropertyRequests = async () => {
         try {
@@ -175,29 +202,59 @@ const HostProperty = () => {
             <div className="flex flex-col w-1/2 relative pb-20 p-10">
                 <h2 className="text-2xl font-medium mb-4">Previous Guest Comments</h2>
                 {propertyComments.map((comment) => (
-                    <div key={comment.id}>
+                <div key={comment.id}>
                     <div className="mb-2 bg-gray-200 p-2 rounded">
-                        <p className="font-medium mb-2">{comment.user}</p>
-                        {Array(comment.Rating)
-                            .fill()
-                            .map((_, i) => (
-                            <span key={i} className="fa fa-star checked"></span>
-                            ))
-                            }
-                        {Array(5 - comment.Rating)
-                            .fill()
-                            .map((_, i) => (
-                            <span key={i} className="fa fa-star"></span>
-                            ))}
-                        <p className="font-medium mb-2">
+                    {Array(comment.Rating)
+                        .fill()
+                        .map((_, i) => (
+                        <span key={i} className="fa fa-star checked"></span>
+                        ))}
+                    {Array(5 - comment.Rating)
+                        .fill()
+                        .map((_, i) => (
+                        <span key={i} className="fa fa-star"></span>
+                        ))}
+                    <p className="font-medium ml-4 mb-2 flex items-center">
+                        <p className="font-medium  mr-2">{comment.user}: </p>
                         {comment.comment}{" "}
-                        <button className="button-normal text-white rounded-full py-2 px-4">
+                        {!comment.hostresponse || !comment.userresponse ? (
+                        <button className="button-normal text-white rounded-full py-2 px-4" onClick={() => toggleReply(comment.id)}>
                             Reply
                         </button>
-                        </p>
+                        ) : null}
+                    </p>
+                    {comment.hostresponse && (
+                        <div className="ml-4 mb-2 text-green-600 flex items-center">
+                        <p className="font-medium mr-2">Host response:</p>
+                        <p>{comment.hostresponse}</p>
+                        </div>
+                    )}
+                    {comment.userresponse && (
+                        <div className="ml-4 mb-2 text-blue-600 flex items-center">
+                        <p className="font-medium mr-2">{comment.user}:</p>
+                        <p>{comment.userresponse}</p>
+                        </div>
+                    )}
+                    {replyVisible === comment.id && (
+                        <div className="mt-2">
+                        <input
+                            type="text"
+                            value={replyText}
+                            onChange={(e) => setReplyText(e.target.value)}
+                            className="border border-gray-400 px-3 py-2 rounded"
+                            placeholder="Write your reply here"
+                        />
+                        <button
+                            className="button-normal text-white rounded-full py-2 px-4 ml-2"
+                            onClick={() => submitReply(comment.id)}
+                        >
+                            Enter
+                        </button>
+                        </div>
+                    )}
                     </div>
-              </div>
-            ))}
+                </div>
+                ))}
           </div>
       </div> 
     </div>
