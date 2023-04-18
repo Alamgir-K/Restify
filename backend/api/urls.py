@@ -31,6 +31,8 @@ urlpatterns = [
     path('rating/<int:pk>/view/',
          views.ViewUserRatings.as_view(), name='view_rating'),
 
+    path('property/<int:pk>/view/',
+         views.PropertyDetailView.as_view(), name='view_property'),
     path('property/<int:pk>/edit/',
          views.PropertyEditView.as_view(), name='edit_property'),
     path('property/<int:pk>/delete/',
