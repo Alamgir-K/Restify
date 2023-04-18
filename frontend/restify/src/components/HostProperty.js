@@ -151,7 +151,7 @@ const HostProperty = () => {
                         <td className="px-3 py-2 border">
                             {request.start_date} - {request.end_date}{"  -  "}
                             {request.status === 'Approved' ? (
-                            <button className="button-normal px-2 py-3 text-white rounded-full" onClick={() => updateReservationStatus('Terminated', request.id)}>
+                            <button className="bg-gray-500 button-normal px-2 py-3 text-white rounded-full" onClick={() => updateReservationStatus('Terminated', request.id)}>
                                 Terminate
                             </button>
                             ) : (
