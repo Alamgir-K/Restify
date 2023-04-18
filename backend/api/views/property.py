@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.authentication import TokenAuthentication
 
 from ..models.user import CustomUser
-from ..models.rentalproperty import RentalProperty, PropertyImage
+from ..models.rentalproperty import RentalProperty
 from ..serializers.property import PropertyCreateSerializer, PropertyEditSerializer
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
@@ -91,7 +91,21 @@ class PropertyEditView(UpdateAPIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# also add a view property 
+class PropertyDetailView(RetrieveAPIView):
+    serializer_class = PropertyCreateSerializer
+    permission_classes = [AllowAny]
+
+    def get_object(self):
+        property_id = self.kwargs.get('pk')
+        property = get_object_or_404(RentalProperty, pk=property_id)
+
+        return property
+
+    def get(self, request, *args, **kwargs):
+        property = self.get_object()
+        serializer = PropertyCreateSerializer(property)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class PropertySearchView(ListAPIView):
     permission_classes = [AllowAny]

@@ -17,6 +17,10 @@ class RentalProperty(models.Model):
     beds = models.PositiveIntegerField()
     baths = models.PositiveIntegerField()
     main_image = models.ImageField(upload_to='property')
+    img1 = models.ImageField(upload_to='property', blank=True, null=True)
+    img2 = models.ImageField(upload_to='property', blank=True, null=True)
+    img3 = models.ImageField(upload_to='property', blank=True, null=True)
+    img4 = models.ImageField(upload_to='property', blank=True, null=True)
     description = models.TextField()
     AMENITIES_CHOICES = (
         ('wifi', 'WiFi'),
@@ -32,7 +36,7 @@ class RentalProperty(models.Model):
                                  MaxValueMultiFieldValidator(8)])
 
 
-class PropertyImage(models.Model):
-    property = models.ForeignKey(
-        RentalProperty, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='property')
+# class PropertyImage(models.Model):
+#     property = models.ForeignKey(
+#         RentalProperty, on_delete=models.CASCADE, related_name='images')
+#     image = models.ImageField(upload_to='property')

@@ -76,7 +76,7 @@ class EditReservationView(UpdateAPIView):
                 notification = Notification.objects.create(
                     user=reservation.user,
                     reservation=reservation,
-                    message=f"{reservation.property.owner.user.username} has {reservation.status} your reservation for {reservation.property.name}"
+                    message=f"You have {reservation.status} your reservation for {reservation.property.name}"
                 )
 
                 return Response(serializer.data)
@@ -84,7 +84,7 @@ class EditReservationView(UpdateAPIView):
             else:
                 return Response({'error': 'You cannot update this reservation to this'}, status=status.HTTP_403_FORBIDDEN)
         if reservation.property.owner == user:
-            if reservation.status == "Pending" and new_status in ["Denied", "Approved", "Terminated"]:
+            if reservation.status == "Pending" and new_status in ["Denied", "Approved"]:
                 reservation.status = new_status
                 reservation.save()
                 serializer = ReservationUpdateSerializer(reservation)

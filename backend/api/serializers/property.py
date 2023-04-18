@@ -1,26 +1,21 @@
 from rest_framework import serializers
 from ..models.user import CustomUser
-from ..models.rentalproperty import RentalProperty, PropertyImage
+from ..models.rentalproperty import RentalProperty
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 
-class PropertyImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PropertyImage
-        fields = '__all__'
+# class PropertyImageSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = PropertyImage
+#         fields = '__all__'
 
 class PropertyCreateSerializer(serializers.ModelSerializer):
     owner_username = serializers.ReadOnlyField(source='owner.user.username')
 
-    images = PropertyImageSerializer(many=True, required=False, read_only = True)
-    uploaded_images = serializers.ListField(
-        child=serializers.ImageField(allow_empty_file=False, use_url=False),
-        write_only=True, required=False
-    )
-    # deleted_images = serializers.ListField(
-    #     child=serializers.IntegerField(),
-    #     write_only=True,
-    #     required=False
+    # images = PropertyImageSerializer(many=True, required=False, read_only = True)
+    # uploaded_images = serializers.ListField(
+    #     child=serializers.ImageField(allow_empty_file=False, use_url=False),
+    #     write_only=True, required=False
     # )
 
     amenities = serializers.MultipleChoiceField(choices=RentalProperty.AMENITIES_CHOICES, required=False, allow_blank=True)
@@ -29,7 +24,7 @@ class PropertyCreateSerializer(serializers.ModelSerializer):
         # serializers works just like django forms
         model = RentalProperty
 
-        fields = ['id', 'owner_username', 'name', 'address', 'city', 'country', 'price', 'max_guests', 'beds', 'baths', 'main_image', 'description', 'amenities', 'images', 'uploaded_images']
+        fields = ['id', 'owner_username', 'name', 'address', 'city', 'country', 'price', 'max_guests', 'beds', 'baths', 'main_image', 'img1', 'img2', 'img3', 'img4', 'description', 'amenities']
 
 
     def validate_amenities(self, value):
@@ -50,16 +45,16 @@ class PropertyCreateSerializer(serializers.ModelSerializer):
 class PropertyEditSerializer(serializers.ModelSerializer):
     owner_username = serializers.ReadOnlyField(source='owner.user.username')
 
-    images = PropertyImageSerializer(many=True, required=False, read_only = True)
-    uploaded_images = serializers.ListField(
-        child=serializers.ImageField(allow_empty_file=False, use_url=False),
-        write_only=True, required=False
-    )
-    deleted_images = serializers.ListField(
-        child=serializers.IntegerField(),
-        write_only=True,
-        required=False
-    )
+    # images = PropertyImageSerializer(many=True, required=False, read_only = True)
+    # uploaded_images = serializers.ListField(
+    #     child=serializers.ImageField(allow_empty_file=False, use_url=False),
+    #     write_only=True, required=False
+    # )
+    # deleted_images = serializers.ListField(
+    #     child=serializers.IntegerField(),
+    #     write_only=True,
+    #     required=False
+    # )
 
     amenities = serializers.MultipleChoiceField(choices=RentalProperty.AMENITIES_CHOICES, required=False, allow_blank=True)
 
@@ -67,7 +62,7 @@ class PropertyEditSerializer(serializers.ModelSerializer):
         # serializers works just like django forms
         model = RentalProperty
 
-        fields = ['id', 'owner_username', 'name', 'address', 'city', 'country', 'price', 'max_guests', 'beds', 'baths', 'description', 'amenities', 'images', 'uploaded_images', 'deleted_images']
+        fields = ['id', 'owner_username', 'name', 'address', 'city', 'country', 'price', 'max_guests', 'beds', 'baths', 'main_image', 'img1', 'img2', 'img3', 'img4', 'description', 'amenities']
         read_only_fields = ['id', 'owner_username', 'city', 'country']
 
 
@@ -110,20 +105,21 @@ class PropertyEditSerializer(serializers.ModelSerializer):
                     ex_list.remove(amenity)
             instance.amenities = ex_list
 
-        uploaded_images = validated_data.get('uploaded_images')
-        if uploaded_images:
-            for image in uploaded_images:
-                PropertyImage.objects.create(property = instance, image=image)
+        if 'img1' in validated_data:
+            instance.img1 = validated_data.get('img1')
+        
+        if 'img2' in validated_data:
+            instance.img2 = validated_data.get('img2')
 
-        deleted_images = validated_data.get('deleted_images')
-        if deleted_images:
-            for img_id in deleted_images:
-                try:
-                    image = PropertyImage.objects.get(id=img_id, property=instance)
-                    image.delete()
-                except PropertyImage.DoesNotExist:
-                    pass
+        if 'img3' in validated_data:
+            instance.img3 = validated_data.get('img3')
+        
+        if 'img4' in validated_data:
+            instance.img4 = validated_data.get('img4')
 
+        main_image = validated_data.get('main_image')
+        if main_image:
+            instance.main_image = main_image
         
         instance.save()
         return instance

@@ -31,7 +31,7 @@ class CreateCommentView(CreateAPIView):
         if reservation.user != user:
             return Response({'error': 'This is not your reservation.'}, status=status.HTTP_403_FORBIDDEN)
 
-        if reservation.status not in ["Completed", "Cancelled"]: 
+        if reservation.status not in ["Completed", "Terminated"]: 
             return Response({'error': 'You cannot make a comment until stay is over.'}, status=status.HTTP_403_FORBIDDEN)
 
         #check that no comment has been made for this reservation
@@ -58,7 +58,7 @@ class CreateUserRating(CreateAPIView):
         host = self.request.user.custom_user
 
         # check that user has reservation that is completed or cancelled for a property owned by the host
-        res = Reservation.objects.filter(user=user, property__owner=host, status__in=["Completed", "Cancelled"])
+        res = Reservation.objects.filter(user=user, property__owner=host, status__in=["Completed", "Terminated"])
         if not res:
             return Response({'error': 'You cannot comment on this user'}, status=status.HTTP_403_FORBIDDEN)
 
