@@ -10,6 +10,8 @@ const UserProfile = () => {
   const [ratings, setRatings] = useState([]);
   const { token } = useContext(AuthContext);
   const [imageUrl, setImageUrl] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -25,27 +27,24 @@ const UserProfile = () => {
         setImageUrl(profileResponse.data.avatar);
 
         const ratingsResponse = await axios.get(
-          `http://localhost:8000/api/rating/${profileResponse.data.id}/view/`,
+          //   `http://localhost:8000/api/rating/${profileResponse.data.id}/view/`,
+          `http://localhost:8000/api/rating/${profileResponse.data.id}/view/?page=${currentPage}`,
           { headers }
         );
 
         setRatings(ratingsResponse.data.results);
-        console.log(profileResponse.data.avatar);
+        setCount(ratingsResponse.data.count);
       } catch (error) {
         console.error(error);
       }
     };
 
-    // if (token) {
     fetchUserProfile();
-    // }
-    // fetchUserProfile();
-  }, [token]);
+  }, [token, currentPage]);
 
-  //   let imageUrl;
-  //   if (profile.avatar) {
-  //     imageUrl = URL.createObjectURL(profile.avatar);
-  //   }
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
 
   if (!profile) {
     return <div>Loading...</div>;
@@ -80,7 +79,7 @@ const UserProfile = () => {
             <div className="block my-4 border-t border-gray-200"></div>
 
             {/* <!-- Detail Confirmation --> */}
-            <div className="px-4 pb-4">
+            <div className="px-4 pb-4 text-left">
               <p className="text-xl font-medium">{`${profile.user.first_name} has confirmed:`}</p>
 
               <span className="flex w-full items-center mt-2">
@@ -123,51 +122,29 @@ const UserProfile = () => {
               </div>
 
               {/* <!-- Rating Div --> */}
-              {/* <div className="">
-              <span className="flex w-full items-center mt-2">
-                <img
-                  src="/images/star-svgrepo-com.svg"
-                  className="h-8 w-8 overflow-hidden rounded-full mt-2 mr-2"
-                />
-                <p className="mt-2 text-lg font-medium">{`4.7 / 5.0`}</p>
-              </span>
-            </div> */}
-
-              {/* <!-- Comment 1 --> */}
-              {/* <div>
-                <p className="mt-2 text-sm text-gray-600">January 2023</p>
-                <p className="text-lg mt-2 font-light">
-                  Alamgir was a fantastic guest! He left the place in great
-                  condition and respected the house rules.
-                </p>
-
-                <div className="flex items-center">
-                  <span className="mt-2 inline-block h-16 w-16 overflow-hidden rounded-full bg-[#fbf8f0]">
-                    <img src="/images/user-svgrepo-com.svg" />
-                  </span>
-                  <p className="inline-block px-2 mt-2 text-sm font-medium">
-                    John Doe
+              {ratings.length == 0 && (
+                <div>
+                  <p className="mt-2 text-lg">
+                    {profile.user.first_name} has not received any rating yet.
                   </p>
                 </div>
-              </div> */}
+              )}
 
-              {/* <!-- Comment 2 --> */}
-              {/* <div>
-                <p className="mt-2 text-sm text-gray-600">February 2023</p>
-                <p className="text-lg mt-2 font-light">
-                  Alamgir was a fantastic guest! He left the place in great
-                  condition and respected the house rules.
-                </p>
+              {ratings.length > 0 && (
+                <div>
+                  <p className="text-lg">
+                    {`Rating: ${
+                      ratings.reduce((acc, rating) => acc + rating.rating, 0) /
+                      ratings.length
+                    } / 5`}
+                  </p>
 
-                <div className="flex items-center">
-                  <span className="mt-2 inline-block h-16 w-16 overflow-hidden rounded-full bg-[#fbf8f0]">
-                    <img src="/images/user-svgrepo-com.svg" />
-                  </span>
-                  <p className="inline-block px-2 mt-2 text-sm font-medium">
-                    Ian Lavine
+                  <p className="mt-2 text-lg">
+                    Some review(s) {profile.user.first_name} has received:
                   </p>
                 </div>
-              </div> */}
+              )}
+
               {ratings.map((rating, index) => (
                 <div key={index}>
                   <p className="mt-2 text-sm text-gray-600">
@@ -188,7 +165,24 @@ const UserProfile = () => {
                 </div>
               ))}
 
-              {/* End */}
+              {ratings.length > 0 && (
+                <div className="flex mt-4">
+                  <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    className="mr-4 px-4 py-2 border-2 border-gray-200 rounded-md hover:bg-gray-200"
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </button>
+                  <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    className="px-4 py-2 border-2 border-gray-200 rounded-md hover:bg-gray-200"
+                    disabled={currentPage * 4 >= count}
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

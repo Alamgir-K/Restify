@@ -10,8 +10,6 @@ const EditProfile = () => {
 
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
-  const [password1, setPassword1] = useState("");
-  const [password2, setPassword2] = useState("");
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [phone, setPhone] = useState("");
@@ -22,7 +20,6 @@ const EditProfile = () => {
     const fetchUserProfile = async () => {
       try {
         const headers = { Authorization: `Bearer ${token}` };
-        console.log(headers);
 
         const profileResponse = await axios.get(
           "http://localhost:8000/api/profile/",
@@ -30,54 +27,52 @@ const EditProfile = () => {
         );
 
         setAvatar(profileResponse.data.avatar);
-
         setUsername(profileResponse.data.user.username);
         setEmail(profileResponse.data.user.email);
         setFname(profileResponse.data.user.first_name);
         setLname(profileResponse.data.user.last_name);
         setPhone(profileResponse.data.phone_number);
-        // setAvatar(profileResponse.data.avatar);
-        setPassword1(profileResponse.data.user.password);
-        setPassword2(profileResponse.data.user.password);
-
-        console.log("Avatar URL:", avatar);
       } catch (error) {
         console.error(error);
       }
     };
 
-    // if (token) {
     fetchUserProfile();
-    // }
-    // fetchUserProfile();
   }, [token]);
+
+  const handleAvatarChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setAvatar(URL.createObjectURL(e.target.files[0]));
+    }
+  };
 
   const handleSignUp = async (e) => {
     e.preventDefault();
 
     try {
+      const formData = new FormData();
+      formData.append("user.username", username);
+      formData.append("user.email", email);
+      formData.append("user.first_name", fname);
+      formData.append("user.last_name", lname);
+      formData.append("phone_number", phone);
+
+      if (e.target.avatar.files[0]) {
+        formData.append("avatar", e.target.avatar.files[0]);
+      }
+
       const response = await axios.put(
         "http://localhost:8000/api/profile/",
-        {
-          user: {
-            username: username,
-            email: email,
-            first_name: fname,
-            last_name: lname,
-            password: password1,
-            password2: password2,
-          },
-          phone_number: phone,
-        },
+        formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
           },
         }
       );
 
       setError("");
-      console.log(response.data);
     } catch (error) {
       console.error("Error during sign up:", error.response.data);
     }
@@ -117,23 +112,13 @@ const EditProfile = () => {
                     >
                       <span className="inline-block h-24 w-24 overflow-hidden rounded-full bg-[#fbf8f0]">
                         <img src={avatar} />
-                        {/* {avatar} */}
                       </span>
                       <input
                         id="avatar"
                         name="avatar"
                         type="file"
                         className="sr-only"
-                        // onChange={(e) => {
-                        //   const file = e.target.files[0];
-                        //   const reader = new FileReader();
-                        //   reader.onloadend = () => {
-                        //     setAvatar(reader.result);
-                        //   };
-                        //   if (file) {
-                        //     reader.readAsDataURL(file);
-                        //   }
-                        // }}
+                        onChange={handleAvatarChange}
                       />
                     </label>
                   </div>
