@@ -7,6 +7,8 @@ import AuthContext from '../AuthContext';
 import { useContext } from 'react';
 
 function NewProperty() {
+  const [amenities, setAmenities] = useState([]);
+  const [currentAmenity, setCurrentAmenity] = useState("");
   const [imageList, setImageList] = useState([]);
   const [title, setTitle] = useState('');
   const [isListed, setIsListed] = useState(true);
@@ -22,12 +24,20 @@ function NewProperty() {
     setTitle(e.target.value);
   }
 
-  function handleListedChange(e) {
-    setIsListed(e.target.checked);
+  function handleAmenityChange(e) {
+    setCurrentAmenity(e.target.value);
   }
 
-  function handleAddressChange(e) {
-    setAddress(e.target.value);
+  function handleAmenitySubmit(e) {
+    e.preventDefault();
+    if (currentAmenity.trim() !== "") {
+      setAmenities([...amenities, currentAmenity]);
+      setCurrentAmenity("");
+    }
+  }
+  
+  function handleListedChange(e) {
+    setIsListed(e.target.checked);
   }
 
   function handleGuestsAllowedChange(e) {
@@ -89,7 +99,8 @@ const handleFileChange = (e) => {
         beds: beds,
         baths: washrooms,
         description: description,
-        main_image: imageList[0]
+        main_image: imageList[0],
+        amenities: amenities
       }, { headers });
   
       console.log(response.data);
@@ -134,6 +145,31 @@ const handleFileChange = (e) => {
                   />
                   <span className="slider round"></span>
                 </label>
+              </div>
+            </div>
+            <div className="w-1/4 flex-col p-4">
+              <label className="block text-gray-700 font-medium mb-2 text-left">Amenities</label>
+              <form onSubmit={handleAmenitySubmit}>
+                <input
+                  type="text"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                  placeholder="Add Amenity"
+                  value={currentAmenity}
+                  onChange={handleAmenityChange}
+                />
+                <button
+                  className="text-white font-medium button-normal py-2 px-4 rounded mt-2"
+                  type="submit"
+                >
+                  Add
+                </button>
+              </form>
+              <div className="border border-gray-300 rounded mt-4 p-4">
+                {amenities.map((amenity, index) => (
+                  <p key={index} className="mb-2">
+                    {amenity}
+                  </p>
+                ))}
               </div>
             </div>
           </div>

@@ -109,4 +109,13 @@
   .plus {
     font-weight: lighter;
   }
+
+  .star-orange {
+    color: orange;
+  }
+
+  .bg-light-blue {
+    background-color: #add8e6;
+  }
+  
   

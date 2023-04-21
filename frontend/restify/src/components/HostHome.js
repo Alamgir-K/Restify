@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../css/style.css';
-// import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
-// import { fetchHostProperties, fetchHostInbox } from "../api";
 import NavBar from './navbar';
 import AuthContext from '../AuthContext';
 import { useContext } from 'react';
@@ -61,6 +59,7 @@ useEffect(() => {
       });
 
       getHostInbox();
+      console.log(hostProperties);
       window.location.reload();
   }
 
@@ -76,6 +75,7 @@ useEffect(() => {
         },
       });
       setHostProperties(response.data.results);
+      // console.log(hostProperties[0].main_image);
       setMaxPages(response.data.count);
     } catch (err) {
       console.error("Error during get property", err.data);

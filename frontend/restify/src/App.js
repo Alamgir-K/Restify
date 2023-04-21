@@ -6,6 +6,7 @@ import Login from './components/signin';
 import HostHome from './components/HostHome';
 import HostNewProperty from './components/HostNewProperty';
 import HostProperty from './components/HostProperty';
+import HostEditProperty from './components/HostEditProperty'
 import UserProfile from './components/profile';
 import EditProfile from './components/profile_edit';
 import Notifications from './components/notifications';
@@ -22,6 +23,7 @@ function App() {
           <Route path="/host-home" element={<HostHome />} />
           <Route path="/host-new-property" element={<HostNewProperty />} />
           <Route path="/host-property/:id" element={<HostProperty />} />
+          <Route path="/host-edit-property/:id" element={<HostEditProperty />} />
           {/* <Route path="/notifications" element={<Notifications />} /> */}
         </Routes>
       </div>
