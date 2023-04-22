@@ -25,14 +25,28 @@ function NewProperty() {
   }
 
   function handleAmenityChange(e) {
+    console.log("changed to: ", currentAmenity);
     setCurrentAmenity(e.target.value);
   }
 
+  function handleAmenityKeyPress(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleAmenitySubmit(e);
+    }
+  }
+
+  const removeAmenity = (index) => {
+    setAmenities((prevAmenities) => prevAmenities.filter((_, i) => i !== index));
+  };
+
   function handleAmenitySubmit(e) {
     e.preventDefault();
+    console.log("handled");
     if (currentAmenity.trim() !== "") {
       setAmenities([...amenities, currentAmenity]);
       setCurrentAmenity("");
+      console.log("Amenities: ", amenities);
     }
   }
   
@@ -127,12 +141,11 @@ const handleFileChange = (e) => {
                 type="text"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-500"
                 id="title"
-                placeholder="Title"
+                value={title}
                 onChange={handleTitleChange}
               />
             </div>
-            <div className="flex items-center w-1/5 p-4">
-              <div className="flex-col">
+            <div className="flex-col items-center w-1/5 p-4">
                 <label className="block text-gray-500 mb-2">
                   Listed
                 </label>
@@ -145,39 +158,49 @@ const handleFileChange = (e) => {
                   />
                   <span className="slider round"></span>
                 </label>
-              </div>
             </div>
             <div className="w-1/4 flex-col p-4">
-              <label className="block text-gray-700 font-medium mb-2 text-left">Amenities</label>
-              <form onSubmit={handleAmenitySubmit}>
-                <input
-                  type="text"
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                  placeholder="Add Amenity"
-                  value={currentAmenity}
-                  onChange={handleAmenityChange}
-                />
-                <button
-                  className="text-white font-medium button-normal py-2 px-4 rounded mt-2"
-                  type="submit"
-                >
-                  Add
-                </button>
-              </form>
+            <label className="block text-gray-700 font-medium mb-2 text-left">Amenities</label>
+                <div className="flex items-center">
+                  <input
+                    type="text"
+                    className="shadow appearance-none border rounded w-2/3 py-2 px-3 text-gray-700"
+                    placeholder="Add Amenity"
+                    value={currentAmenity}
+                    onChange={handleAmenityChange}
+                    onKeyPress={handleAmenityKeyPress}
+                  />
+                  <button
+                    className="text-white font-medium button-normal py-2 px-4 rounded ml-2"
+                    type="button"
+                    onClick={handleAmenitySubmit}
+                  >
+                    Add
+                  </button>
+                </div>
               <div className="border border-gray-300 rounded mt-4 p-4">
-                {amenities.map((amenity, index) => (
-                  <p key={index} className="mb-2">
-                    {amenity}
-                  </p>
-                ))}
-              </div>
+                  {amenities.map((amenity, index) => (
+                    <div
+                      key={index}
+                      className="bg-orange-200 text-gray-700 rounded mb-2 p-2 inline-flex items-center"
+                    >
+                      <p>{amenity}</p>
+                      <button
+                        className="text-red-500 hover:text-red-800 text-xl ml-2"
+                        onClick={() => removeAmenity(index)}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
             </div>
           </div>
           <div className="flex flex-wrap">
             {/* Step 3: Display each image in a row using map */}
             {imageList.map((url, index) => (
               <div key={index} className="relative w-64 h-64 mr-4 mb-4">
-                <img src={url} alt={`House Image ${index}`} />
+                <img src={'http://localhost:8000' + url} alt={`House Image ${index}`} />
                 <button
                   className="absolute top-0 right-0 text-red-500 hover:text-red-800 text-2xl p-2"
                   onClick={() => removeImage(index)}
@@ -197,18 +220,29 @@ const handleFileChange = (e) => {
           <div className="flex">
             <div className="w-3/6 flex-col p-4">
               <label className="block text-gray-700 font-medium mb-2 text-left">Address</label>
-              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" type="text" 
-              onChange={handleLocationChange}/>
-              
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                type="text"
+                value={address}
+                onChange={handleLocationChange}
+              />
             </div>
             <div className="w-3/6 flex-col p-4">
               <label className="block text-gray-700 font-medium mb-2 text-left">Cost Per Night</label>
-              <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700" type="number" 
-              onChange={handlePriceChange}/>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                type="number"
+                value={price}
+                onChange={handlePriceChange}
+              />
             </div>
             <div className="w-1/4 flex-col p-4">
-              <label className="block text-gray-700 font-medium mb-2 text-left">Max Guests</label>
-              <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
+                <label className="block text-gray-700 font-medium mb-2 text-left">Max Guests</label>
+                <select
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                  value={guestsAllowed}
+                  onChange={handleGuestsAllowedChange}
+                >
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -219,12 +253,15 @@ const handleFileChange = (e) => {
                 <option value="8">8</option>
                 <option value="9">9</option>
                 <option value="10+">10+</option>
-                onChange={handleGuestsAllowedChange}
               </select>
             </div>
             <div className="w-1/4 flex-col p-4">
               <label className="block text-gray-700 font-medium mb-2 text-left">Beds</label>
-              <select className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
+              <select
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                value={beds}
+                onChange={handleBedsChange}
+              >
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -233,31 +270,33 @@ const handleFileChange = (e) => {
                 <option value="6">6</option>
                 <option value="7">7</option>
                 <option value="8">8+</option>
-                onChange={handleBedsChange}
               </select>
             </div>
             <div className="w-1/4 flex-col p-4">
               <label className="block text-gray-700 font-medium mb-2 text-left">Washrooms</label>
-              <select className="shadow appearance-none border rounded w-full text-gray-500 py-2 px-3">
+              <select
+                className="shadow appearance-none border rounded w-full text-gray-500 py-2 px-3"
+                value={washrooms}
+                onChange={handleWashroomsChange}
+              >
                 <option>1</option>
                 <option>2</option>
                 <option>3</option>
                 <option>4</option>
                 <option>5</option>
                 <option>6+</option>
-                onChange={handleWashroomsChange}
               </select>
             </div>
           </div>
-            <div className="mb-4">
-              <label className="block text-gray-500 mb-2">Description</label>
-              <textarea
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-500"
-                rows="5"
-                placeholder="Description"
-                onChange={handleDescriptionChange}
-              ></textarea>
-            </div>
+          <div className="mb-4">
+            <label className="block text-gray-500 mb-2">Description</label>
+            <textarea
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-500"
+              rows="5"
+              value={description}
+              onChange={handleDescriptionChange}
+            ></textarea>
+          </div>
             <div className="flex items-center justify-between">
               <button
                 className="text-white font-medium button-normal py-2 px-4 rounded"
