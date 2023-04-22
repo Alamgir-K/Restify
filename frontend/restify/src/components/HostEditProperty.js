@@ -27,14 +27,28 @@ function EditProperty() {
   }
 
   function handleAmenityChange(e) {
+    console.log("changed to: ", currentAmenity);
     setCurrentAmenity(e.target.value);
   }
 
+  function handleAmenityKeyPress(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleAmenitySubmit(e);
+    }
+  }
+
+  const removeAmenity = (index) => {
+    setAmenities((prevAmenities) => prevAmenities.filter((_, i) => i !== index));
+  };
+
   function handleAmenitySubmit(e) {
     e.preventDefault();
+    console.log("handled");
     if (currentAmenity.trim() !== "") {
       setAmenities([...amenities, currentAmenity]);
       setCurrentAmenity("");
+      console.log("Amenities: ", amenities);
     }
   }
 
@@ -71,7 +85,6 @@ function EditProperty() {
   };
 
   const setPropertyFormValues = (property) => {
-    console.log(property);
     setTitle(property.name);
     setAddress(property.address);
     setGuestsAllowed(property.max_guests);
@@ -99,17 +112,17 @@ function EditProperty() {
       const response = await axios.get(`http://localhost:8000/api/property/${id}/view`, {
         headers,
       });
-      console.log(response.data);
       setPropertyDetails(response.data);
       setPropertyFormValues(response.data);
+      console.log("Amenities 2.0: ", amenities);
     } catch (err) {
-      console.error("Error during get details", err.data);
+      console.error("Error during get details", err);
     }
   };
 
   useEffect(() => {
     getPropertyDetails();
-  }, []);
+  }, [token]);
 
 const handleFileChange = (e) => {
   const file = e.target.files[0];
@@ -144,8 +157,6 @@ const handleFileChange = (e) => {
         main_image: imageList[0],
         amenities: amenities
       }, { headers });
-      console.log(response.data);
-      window.location.reload();
     } catch (error) {
       console.error(error.response.data);
     }
@@ -164,18 +175,17 @@ const handleFileChange = (e) => {
           <h1 className="font-semibold mb-6 text-3xl text-left">New Property</h1>
           <form className="bg-white shadow-md rounded px-6 pt-8" onSubmit={handleSubmit} encType="multipart/form-data">
           <div className="flex">
-          <div className="mb-4 text-left w-2/5">
-            <label className="block text-gray-500 mb-2" htmlFor="title">Title</label>
-            <input
-              type="text"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-500"
-              id="title"
-              value={title}
-              onChange={handleTitleChange}
-            />
-          </div>
-            <div className="flex items-center w-1/5 p-4">
-              <div className="flex-col">
+            <div className="mb-4 text-left w-2/5">
+              <label className="block text-gray-500 mb-2" htmlFor="title">Title</label>
+              <input
+                type="text"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-500"
+                id="title"
+                value={title}
+                onChange={handleTitleChange}
+              />
+            </div>
+            <div className="flex-col items-center w-1/5 p-4">
                 <label className="block text-gray-500 mb-2">
                   Listed
                 </label>
@@ -188,39 +198,49 @@ const handleFileChange = (e) => {
                   />
                   <span className="slider round"></span>
                 </label>
-              </div>
             </div>
             <div className="w-1/4 flex-col p-4">
-              <label className="block text-gray-700 font-medium mb-2 text-left">Amenities</label>
-              <form onSubmit={handleAmenitySubmit}>
-                <input
-                  type="text"
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-                  placeholder="Add Amenity"
-                  value={currentAmenity}
-                  onChange={handleAmenityChange}
-                />
-                <button
-                  className="text-white font-medium button-normal py-2 px-4 rounded mt-2"
-                  type="submit"
-                >
-                  Add
-                </button>
-              </form>
+            <label className="block text-gray-700 font-medium mb-2 text-left">Amenities</label>
+                <div className="flex items-center">
+                  <input
+                    type="text"
+                    className="shadow appearance-none border rounded w-2/3 py-2 px-3 text-gray-700"
+                    placeholder="Add Amenity"
+                    value={currentAmenity}
+                    onChange={handleAmenityChange}
+                    onKeyPress={handleAmenityKeyPress}
+                  />
+                  <button
+                    className="text-white font-medium button-normal py-2 px-4 rounded ml-2"
+                    type="button"
+                    onClick={handleAmenitySubmit}
+                  >
+                    Add
+                  </button>
+                </div>
               <div className="border border-gray-300 rounded mt-4 p-4">
-                {amenities.map((amenity, index) => (
-                  <p key={index} className="mb-2">
-                    {amenity}
-                  </p>
-                ))}
-              </div>
+                  {amenities.map((amenity, index) => (
+                    <div
+                      key={index}
+                      className="bg-orange-200 text-gray-700 rounded mb-2 p-2 inline-flex items-center"
+                    >
+                      <p>{amenity}</p>
+                      <button
+                        className="text-red-500 hover:text-red-800 text-xl ml-2"
+                        onClick={() => removeAmenity(index)}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
             </div>
           </div>
           <div className="flex flex-wrap">
             {/* Step 3: Display each image in a row using map */}
             {imageList.map((url, index) => (
               <div key={index} className="relative w-64 h-64 mr-4 mb-4">
-                <img src={url} alt={`House Image ${index}`} />
+                <img src={'http://localhost:8000' + url} alt={`House Image ${index}`} />
                 <button
                   className="absolute top-0 right-0 text-red-500 hover:text-red-800 text-2xl p-2"
                   onClick={() => removeImage(index)}
