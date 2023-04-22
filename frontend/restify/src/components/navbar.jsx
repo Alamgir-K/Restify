@@ -44,20 +44,20 @@ const NavBar = () => {
               </a>
             </div>
             <div class="mx-2 sm:mx-4">
-              <a href="search.html">
+              <Link to="/search" className="">
                 <img
                   class="h-7 w-7 overflow-hidden rounded-full"
                   src="/images/search-svgrepo-com.svg"
                 />
-              </a>
+              </Link>
             </div>
             <div class="mx-2 sm:mx-4">
-              <a href="reservations.html">
+              <Link to="/reservations" className="">
                 <img
                   class="h-7 w-7 overflow-hidden rounded-full"
                   src="/images/suitcase-2-svgrepo-com.svg"
                 />
-              </a>
+              </Link>
             </div>
             <div class="mx-2 sm:mx-4">
               <a href="host_home.html">

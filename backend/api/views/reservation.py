@@ -60,9 +60,15 @@ class EditReservationView(UpdateAPIView):
     serializer_class = ReservationUpdateSerializer
     permission_classes = [IsAuthenticated]
 
-    def put(self, request, *args, **kwargs):
+    def get_object(self):
         reservation_id = self.kwargs['pk']
         reservation = get_object_or_404(Reservation, id=reservation_id)
+        return reservation
+
+    def put(self, request, *args, **kwargs):
+        reservation = self.get_object()
+        # reservation_id = self.kwargs['pk']
+        # reservation = get_object_or_404(Reservation, id=reservation_id)
         user = get_object_or_404(CustomUser, user=self.request.user)
 
         new_status = self.request.data.get('status')

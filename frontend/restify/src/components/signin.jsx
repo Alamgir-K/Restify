@@ -26,6 +26,7 @@ const Login = () => {
       // Save the tokens and handle navigation to another page or component.
       setAccessToken(response.data.access);
       setError("");
+      navigate("/");
       console.log(response.data);
     } catch (error) {
       console.error("Error during sign in:", error.response.data);
