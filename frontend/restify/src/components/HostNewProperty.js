@@ -80,6 +80,7 @@ function NewProperty() {
 
   const removeImage = (index) => {
     setImageList((prevImageList) => prevImageList.filter((_, i) => i !== index));
+    console.log(imageList);
   };
   
 

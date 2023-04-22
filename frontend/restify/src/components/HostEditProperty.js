@@ -85,6 +85,7 @@ function EditProperty() {
   };
 
   const setPropertyFormValues = (property) => {
+    console.log(property);
     setTitle(property.name);
     setAddress(property.address);
     setGuestsAllowed(property.max_guests);
@@ -95,7 +96,7 @@ function EditProperty() {
     const propertyImages = [property.main_image];
 
     for (let i = 1; i <= 4; i++) {
-      const imageKey = `image_${i}`;
+      const imageKey = `img${i}`;
       if (property[imageKey]) {
         propertyImages.push(property[imageKey]);
       }
@@ -140,6 +141,8 @@ const handleFileChange = (e) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    console.log(imageList);
   
     const headers = { Authorization: `Bearer ${token}` };
   
