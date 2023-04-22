@@ -9,12 +9,18 @@ import HostProperty from './components/HostProperty';
 import UserProfile from './components/profile';
 import EditProfile from './components/profile_edit';
 import Notifications from './components/notifications';
+import HomePage from './components/HomePage';
+import SearchResult from './components/SearchResult';
+import Reservations from './components/Reservations';
 
 function App() {
   return (
     <Router>
       <div className="App">
         <Routes>
+          <Route path="/reservations" element={<Reservations />} />
+          <Route path="/search" element={<SearchResult />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/profile/edit" element={<EditProfile />} />
           <Route path="/signup" element={<SignUp />} />
