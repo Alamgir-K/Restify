@@ -24,7 +24,6 @@ const Notifications = ({ hidden }) => {
             },
           }
         );
-        console.log(response);
         setNotifications(response.data.results);
         setCount(response.data.count);
       } catch (error) {
@@ -88,37 +87,37 @@ const Notifications = ({ hidden }) => {
   }
 
   return (
-    <div class={hiddenClass} id="notification-menu">
-      <div class="relative grid gap-4 p-2 text-left">
+    <div className={hiddenClass} id="notification-menu">
+      <div className="relative grid gap-4 p-2 text-left">
         {notifications.map((notification) => (
-          <div key={notification.id} class="flex items-center">
-            <div class="flex-grow">
+          <div key={notification.id} className="flex items-center">
+            <div className="flex-grow">
               <p
-                class={`font-medium ${
+                className={`font-medium ${
                   notification.is_read ? "text-gray-500" : "text-gray-900"
                 }`}
               >
                 {notification.username}
               </p>
               <p
-                class={`text-sm ${
+                className={`text-sm ${
                   notification.is_read ? "text-gray-400" : "text-gray-800"
                 }`}
               >
                 {notification.message}
               </p>
             </div>
-            <div class="flex-shrink-0 flex items-center">
+            <div className="flex-shrink-0 flex items-center">
               {!notification.is_read && (
                 <button
-                  class="px-2 py-1 text-sm rounded border"
+                  className="ml-2 px-2 py-1 text-sm rounded border"
                   onClick={() => markNotificationRead(notification.id)}
                 >
                   Read
                 </button>
               )}
               <button
-                class="ml-2 px-2 py1 text-sm rounded border"
+                className="ml-2 px-2 py1 text-sm rounded border"
                 onClick={() => markNotificationCleared(notification.id)}
               >
                 Clear
@@ -128,18 +127,18 @@ const Notifications = ({ hidden }) => {
         ))}
       </div>
 
-      <div class="flex justify-center mt-4">
+      <div className="flex justify-center mt-4">
         <button
-          class="mx-1 px-3 py-1 rounded border"
+          className="mx-1 px-3 py-1 rounded border bg-[#fbf8f0]"
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
         >
           Prev
         </button>
         <button
-          class="mx-1 px-3 py-1 rounded border"
+          className="mx-1 px-3 py-1 rounded border bg-[#fbf8f0]"
           onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage * 5 >= count}
+          disabled={currentPage * 4 >= count}
         >
           Next
         </button>

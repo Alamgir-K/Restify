@@ -44,6 +44,8 @@ urlpatterns = [
     path('login/', views.UserLoginView.as_view(), name="login"),
     path('logout/', views.UserLogoutView.as_view(), name="logout"),
     path('profile/', views.UserProfileView.as_view(), name='profile'),
+    path('profile/<int:id>/', views.UserPublicProfileView.as_view(),
+         name='public_profile'),
 
     path('notifications/', views.NotificationsView.as_view(), name='notifications'),
     path('notifications/<int:notification_id>/read/',

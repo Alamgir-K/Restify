@@ -30,17 +30,18 @@ class CreateReservationView(CreateAPIView):
 
         # check whether reservation by this user for this property already exists
         exists = Reservation.objects.filter(
-            property=rental_property, user=self.request.user.custom_user)
+            property=rental_property, user=self.request.user.custom_user, status="Pending")
         if exists:
             print("no duplicate")
-            return Response({'error': 'You have already made a reservation for this property'}, status=status.HTTP_403_FORBIDDEN)
+            return Response({'error': 'You have a pending reservation for this place'}, status=status.HTTP_403_FORBIDDEN)
 
-        other_reservations = Reservation.objects.filter(
-            property=rental_property)
-        for reservation in other_reservations:
-            if reservation.status == "Approved":
-                if self.request.data.get('start_date') <= reservation.end_date and self.request.data.get('end_date') >= reservation.start_date:
-                    return Response({'error': 'This property is not available during this time'}, status=status.HTTP_403_FORBIDDEN)
+        start_date = self.request.data.get('start_date')
+        end_date = self.request.data.get('end_date')
+        # check whether this property is available during this time
+        overlapping_reservations = Reservation.objects.filter(
+            property=rental_property, status="Approved", start_date__lte=end_date, end_date__gte=start_date)
+        if overlapping_reservations:
+            return Response({'error': 'This property is not available during this time'}, status=status.HTTP_403_FORBIDDEN)
 
         user = get_object_or_404(CustomUser, user=self.request.user)
         serializer.save(user=user, property=rental_property, status="Pending")
@@ -60,9 +61,15 @@ class EditReservationView(UpdateAPIView):
     serializer_class = ReservationUpdateSerializer
     permission_classes = [IsAuthenticated]
 
-    def put(self, request, *args, **kwargs):
+    def get_object(self):
         reservation_id = self.kwargs['pk']
         reservation = get_object_or_404(Reservation, id=reservation_id)
+        return reservation
+
+    def put(self, request, *args, **kwargs):
+        reservation = self.get_object()
+        # reservation_id = self.kwargs['pk']
+        # reservation = get_object_or_404(Reservation, id=reservation_id)
         user = get_object_or_404(CustomUser, user=self.request.user)
 
         new_status = self.request.data.get('status')
