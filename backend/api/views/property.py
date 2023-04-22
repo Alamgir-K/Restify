@@ -78,6 +78,7 @@ class PropertyEditView(UpdateAPIView):
         return property
 
     def put(self, request, *args, **kwargs):
+        print("was called -----------------------")
         property = self.get_object()
 
         user = get_object_or_404(CustomUser, user=self.request.user)

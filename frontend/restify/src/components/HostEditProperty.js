@@ -105,6 +105,12 @@ function EditProperty() {
     setImageList(propertyImages);
     setAmenities(property.amenities);
   };
+
+  // const handleAvatarChange = (e) => {
+  //   if (e.target.files && e.target.files[0]) {
+  //     setAvatar(URL.createObjectURL(e.target.files[0]));
+  //   }
+  // };
   
   // Update the getPropertyDetails function
   const getPropertyDetails = async () => {
@@ -131,7 +137,7 @@ const handleFileChange = (e) => {
 
   reader.onload = () => {
     const newUrl = reader.result;
-    setImageList([...imageList, newUrl]);
+    setImageList([...imageList, URL.createObjectURL(newUrl)]);
   };
 
   if (file) {
@@ -161,7 +167,7 @@ const handleFileChange = (e) => {
         amenities: amenities
       }, { headers });
     } catch (error) {
-      console.error(error.response.data);
+      console.error(error);
     }
   };  
   
