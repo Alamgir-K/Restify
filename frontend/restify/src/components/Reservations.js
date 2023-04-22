@@ -101,7 +101,7 @@ const Reservations = () => {
                         )}
                         {["Terminated", "Completed"].includes(status) && (
                             <button
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            className="bg-[#f1996f] hover:bg-[#bb6e4b] text-white font-bold py-2 px-4 rounded"
                             onClick={() => (window.location.href = link)}
                             >
                             Review Property
@@ -149,14 +149,14 @@ const Reservations = () => {
 
       {count > 0 ? (<div class="flex justify-center bottom-0 mt-4 pb-1">
                 <button
-                class="mx-1 px-3 my-9 rounded border"
+                class="mx-1 px-3 my-9 rounded border bg-[#fbf8f0]"
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
                 >
                 Prev
                 </button>
                 <button
-                class="mx-1 px-3 my-9 rounded border"
+                class="mx-1 px-3 my-9 rounded border bg-[#fbf8f0]"
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage * 5 >= count}
                 >
