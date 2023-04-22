@@ -4,6 +4,7 @@ import axios from "axios";
 import { useContext } from "react";
 import NavBar from "./navbar";
 import { Link } from "react-router-dom";
+import Login from "./signin";
 
 const EditProfile = () => {
   const { token } = useContext(AuthContext);
@@ -79,7 +80,7 @@ const EditProfile = () => {
   };
 
   if (!token) {
-    return <div>Loading...</div>;
+    return <Login />;
   }
 
   return (

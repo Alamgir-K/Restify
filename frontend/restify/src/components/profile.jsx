@@ -5,6 +5,8 @@ import { useContext } from "react";
 import NavBar from "./navbar";
 import { Link } from "react-router-dom";
 
+import Login from "./signin";
+
 const UserProfile = () => {
   const [profile, setProfile] = useState(null);
   const [ratings, setRatings] = useState([]);
@@ -12,6 +14,7 @@ const UserProfile = () => {
   const [imageUrl, setImageUrl] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [count, setCount] = useState(0);
+  const [hostInfo, setHostInfo] = useState({});
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -27,7 +30,6 @@ const UserProfile = () => {
         setImageUrl(profileResponse.data.avatar);
 
         const ratingsResponse = await axios.get(
-          //   `http://localhost:8000/api/rating/${profileResponse.data.id}/view/`,
           `http://localhost:8000/api/rating/${profileResponse.data.id}/view/?page=${currentPage}`,
           { headers }
         );
@@ -42,12 +44,42 @@ const UserProfile = () => {
     fetchUserProfile();
   }, [token, currentPage]);
 
+  useEffect(() => {
+    const fetchHostInfo = async () => {
+      const newHostInfo = {};
+
+      for (const rating of ratings) {
+        if (!newHostInfo[rating.host]) {
+          const response = await axios.get(
+            `http://localhost:8000/api/profile/${rating.host}/`
+          );
+
+          newHostInfo[rating.host] = {
+            first_name: response.data.user.first_name,
+            last_name: response.data.user.last_name,
+            avatar: response.data.avatar,
+          };
+        }
+      }
+
+      setHostInfo(newHostInfo);
+    };
+
+    fetchHostInfo();
+  }, [ratings]);
+
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return date.toLocaleDateString(undefined, options);
+  }
+
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
 
   if (!profile) {
-    return <div>Loading...</div>;
+    return <Login />;
   }
 
   return (
@@ -148,19 +180,28 @@ const UserProfile = () => {
               {ratings.map((rating, index) => (
                 <div key={index}>
                   <p className="mt-2 text-sm text-gray-600">
-                    {rating.created_at}
+                    {formatDate(rating.created_at)}
                   </p>
                   <p className="text-lg mt-2 font-light">{rating.comment}</p>
                   <div className="flex items-center">
                     <span className="mt-2 inline-block h-16 w-16 overflow-hidden rounded-full bg-[#fbf8f0]">
-                      <img
-                        src="./images/user-svgrepo-com.svg"
-                        alt="User avatar"
-                      />
+                      {hostInfo[rating.host] && (
+                        <img
+                          src={
+                            hostInfo[rating.host].avatar
+                              ? hostInfo[rating.host].avatar
+                              : "./images/user-svgrepo-com.svg"
+                          }
+                          alt="User avatar"
+                        />
+                      )}
                     </span>
-                    <p className="inline-block px-2 mt-2 text-sm font-medium">
-                      {rating.host.first_name} {rating.host.last_name}
-                    </p>
+                    {hostInfo[rating.host] && (
+                      <p className="inline-block px-2 mt-2 text-sm font-medium">
+                        {hostInfo[rating.host].first_name}{" "}
+                        {hostInfo[rating.host].last_name}
+                      </p>
+                    )}
                   </div>
                 </div>
               ))}
