@@ -14,6 +14,9 @@ from django.shortcuts import get_object_or_404
 from ..serializers.user import CustomUserSerializer
 from ..models.user import CustomUser
 
+from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
+from rest_framework.settings import api_settings
+
 
 class UserSignUpView(CreateAPIView):
     serializer_class = CustomUserSerializer
@@ -67,6 +70,8 @@ class UserLogoutView(APIView):
 class UserProfileView(RetrieveAPIView, UpdateAPIView):
     serializer_class = CustomUserSerializer
     permission_classes = [IsAuthenticated]
+    parser_classes = api_settings.DEFAULT_PARSER_CLASSES + \
+        [JSONParser, FormParser, MultiPartParser]
 
     def get_object(self):
         return get_object_or_404(CustomUser, user=self.request.user)
@@ -79,3 +84,12 @@ class UserProfileView(RetrieveAPIView, UpdateAPIView):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data)
+
+
+class UserPublicProfileView(RetrieveAPIView):
+    serializer_class = CustomUserSerializer
+    permission_classes = [AllowAny]
+
+    def get_object(self):
+        user_id = self.kwargs.get('id')
+        return get_object_or_404(CustomUser, user_id=user_id)

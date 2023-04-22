@@ -5,11 +5,16 @@ import { useContext } from "react";
 import NavBar from "./navbar";
 import { Link } from "react-router-dom";
 
+import Login from "./signin";
+
 const UserProfile = () => {
   const [profile, setProfile] = useState(null);
   const [ratings, setRatings] = useState([]);
   const { token } = useContext(AuthContext);
   const [imageUrl, setImageUrl] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [count, setCount] = useState(0);
+  const [hostInfo, setHostInfo] = useState({});
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -25,30 +30,56 @@ const UserProfile = () => {
         setImageUrl(profileResponse.data.avatar);
 
         const ratingsResponse = await axios.get(
-          `http://localhost:8000/api/rating/${profileResponse.data.id}/view/`,
+          `http://localhost:8000/api/rating/${profileResponse.data.id}/view/?page=${currentPage}`,
           { headers }
         );
 
         setRatings(ratingsResponse.data.results);
-        console.log(profileResponse.data.avatar);
+        setCount(ratingsResponse.data.count);
       } catch (error) {
         console.error(error);
       }
     };
 
-    // if (token) {
     fetchUserProfile();
-    // }
-    // fetchUserProfile();
-  }, [token]);
+  }, [token, currentPage]);
 
-  //   let imageUrl;
-  //   if (profile.avatar) {
-  //     imageUrl = URL.createObjectURL(profile.avatar);
-  //   }
+  useEffect(() => {
+    const fetchHostInfo = async () => {
+      const newHostInfo = {};
+
+      for (const rating of ratings) {
+        if (!newHostInfo[rating.host]) {
+          const response = await axios.get(
+            `http://localhost:8000/api/profile/${rating.host}/`
+          );
+
+          newHostInfo[rating.host] = {
+            first_name: response.data.user.first_name,
+            last_name: response.data.user.last_name,
+            avatar: response.data.avatar,
+          };
+        }
+      }
+
+      setHostInfo(newHostInfo);
+    };
+
+    fetchHostInfo();
+  }, [ratings]);
+
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return date.toLocaleDateString(undefined, options);
+  }
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
 
   if (!profile) {
-    return <div>Loading...</div>;
+    return <Login />;
   }
 
   return (
@@ -80,7 +111,7 @@ const UserProfile = () => {
             <div className="block my-4 border-t border-gray-200"></div>
 
             {/* <!-- Detail Confirmation --> */}
-            <div className="px-4 pb-4">
+            <div className="px-4 pb-4 text-left">
               <p className="text-xl font-medium">{`${profile.user.first_name} has confirmed:`}</p>
 
               <span className="flex w-full items-center mt-2">
@@ -123,72 +154,76 @@ const UserProfile = () => {
               </div>
 
               {/* <!-- Rating Div --> */}
-              {/* <div className="">
-              <span className="flex w-full items-center mt-2">
-                <img
-                  src="/images/star-svgrepo-com.svg"
-                  className="h-8 w-8 overflow-hidden rounded-full mt-2 mr-2"
-                />
-                <p className="mt-2 text-lg font-medium">{`4.7 / 5.0`}</p>
-              </span>
-            </div> */}
-
-              {/* <!-- Comment 1 --> */}
-              {/* <div>
-                <p className="mt-2 text-sm text-gray-600">January 2023</p>
-                <p className="text-lg mt-2 font-light">
-                  Alamgir was a fantastic guest! He left the place in great
-                  condition and respected the house rules.
-                </p>
-
-                <div className="flex items-center">
-                  <span className="mt-2 inline-block h-16 w-16 overflow-hidden rounded-full bg-[#fbf8f0]">
-                    <img src="/images/user-svgrepo-com.svg" />
-                  </span>
-                  <p className="inline-block px-2 mt-2 text-sm font-medium">
-                    John Doe
+              {ratings.length == 0 && (
+                <div>
+                  <p className="mt-2 text-lg">
+                    {profile.user.first_name} has not received any rating yet.
                   </p>
                 </div>
-              </div> */}
+              )}
 
-              {/* <!-- Comment 2 --> */}
-              {/* <div>
-                <p className="mt-2 text-sm text-gray-600">February 2023</p>
-                <p className="text-lg mt-2 font-light">
-                  Alamgir was a fantastic guest! He left the place in great
-                  condition and respected the house rules.
-                </p>
+              {ratings.length > 0 && (
+                <div>
+                  <p className="text-lg">
+                    {`Rating: ${
+                      ratings.reduce((acc, rating) => acc + rating.rating, 0) /
+                      ratings.length
+                    } / 5`}
+                  </p>
 
-                <div className="flex items-center">
-                  <span className="mt-2 inline-block h-16 w-16 overflow-hidden rounded-full bg-[#fbf8f0]">
-                    <img src="/images/user-svgrepo-com.svg" />
-                  </span>
-                  <p className="inline-block px-2 mt-2 text-sm font-medium">
-                    Ian Lavine
+                  <p className="mt-2 text-lg">
+                    Some review(s) {profile.user.first_name} has received:
                   </p>
                 </div>
-              </div> */}
+              )}
+
               {ratings.map((rating, index) => (
                 <div key={index}>
                   <p className="mt-2 text-sm text-gray-600">
-                    {rating.created_at}
+                    {formatDate(rating.created_at)}
                   </p>
                   <p className="text-lg mt-2 font-light">{rating.comment}</p>
                   <div className="flex items-center">
                     <span className="mt-2 inline-block h-16 w-16 overflow-hidden rounded-full bg-[#fbf8f0]">
-                      <img
-                        src="./images/user-svgrepo-com.svg"
-                        alt="User avatar"
-                      />
+                      {hostInfo[rating.host] && (
+                        <img
+                          src={
+                            hostInfo[rating.host].avatar
+                              ? hostInfo[rating.host].avatar
+                              : "./images/user-svgrepo-com.svg"
+                          }
+                          alt="User avatar"
+                        />
+                      )}
                     </span>
-                    <p className="inline-block px-2 mt-2 text-sm font-medium">
-                      {rating.host.first_name} {rating.host.last_name}
-                    </p>
+                    {hostInfo[rating.host] && (
+                      <p className="inline-block px-2 mt-2 text-sm font-medium">
+                        {hostInfo[rating.host].first_name}{" "}
+                        {hostInfo[rating.host].last_name}
+                      </p>
+                    )}
                   </div>
                 </div>
               ))}
 
-              {/* End */}
+              {ratings.length > 0 && (
+                <div className="flex mt-4">
+                  <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    className="mr-4 px-4 py-2 border-2 border-gray-200 rounded-md hover:bg-gray-200"
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </button>
+                  <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    className="px-4 py-2 border-2 border-gray-200 rounded-md hover:bg-gray-200"
+                    disabled={currentPage * 4 >= count}
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
