@@ -84,3 +84,12 @@ class UserProfileView(RetrieveAPIView, UpdateAPIView):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data)
+
+
+class UserPublicProfileView(RetrieveAPIView):
+    serializer_class = CustomUserSerializer
+    permission_classes = [AllowAny]
+
+    def get_object(self):
+        user_id = self.kwargs.get('id')
+        return get_object_or_404(CustomUser, user_id=user_id)
