@@ -110,7 +110,7 @@ const Notifications = ({ hidden }) => {
             <div className="flex-shrink-0 flex items-center">
               {!notification.is_read && (
                 <button
-                  className="px-2 py-1 text-sm rounded border"
+                  className="ml-2 px-2 py-1 text-sm rounded border"
                   onClick={() => markNotificationRead(notification.id)}
                 >
                   Read
@@ -129,14 +129,14 @@ const Notifications = ({ hidden }) => {
 
       <div className="flex justify-center mt-4">
         <button
-          className="mx-1 px-3 py-1 rounded border"
+          className="mx-1 px-3 py-1 rounded border bg-[#fbf8f0]"
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
         >
           Prev
         </button>
         <button
-          className="mx-1 px-3 py-1 rounded border"
+          className="mx-1 px-3 py-1 rounded border bg-[#fbf8f0]"
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage * 4 >= count}
         >
