@@ -83,6 +83,24 @@ function ReservationForm({ property, token }){
     const [guests, setGuests] = useState("");
     const [error, setError] = useState("");
     const [message, setMessage] = useState("");
+    const [total, setTotal] = useState(0);
+
+    const calculateTotal = () => {
+        if (startDate && endDate) {
+          const start = new Date(startDate);
+          const end = new Date(endDate);
+          const days = (end - start) / (1000 * 60 * 60 * 24);
+          if (days > 0) {
+            setTotal(days * property.price);
+          } else {
+            setTotal(0);
+          }
+        }
+      };
+    
+    useEffect(() => {
+        calculateTotal();
+    }, [startDate, endDate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -146,6 +164,10 @@ function ReservationForm({ property, token }){
                         value={guests}
                         onChange={(e) => setGuests(e.target.value)}
                     />
+                </div>
+                <div className="total">
+                    <label>Total:</label>
+                    <span>${total.toFixed(2)}</span>
                 </div>
                 <button type="submit">Reserve</button>
                 {error && <div className="error-message">{error.message}</div>}

@@ -1,6 +1,8 @@
 from django.db import models
 from .user import CustomUser
 from . import RentalProperty
+from multiselectfield.validators import MaxValueMultiFieldValidator
+from django.core.validators import MinValueValidator
 
 
 class Reservation(models.Model):
@@ -13,6 +15,7 @@ class Reservation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     message = models.TextField(default=None, blank=True, null=True)
     guest = models.IntegerField()
+    total_cost = models.FloatField(validators=[MinValueValidator(0.0)])
     PENDING = 'P'
     DENIED = 'D'
     APPROVED = 'A'

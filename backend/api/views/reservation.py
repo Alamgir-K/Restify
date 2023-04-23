@@ -15,6 +15,7 @@ from ..models.reservation import Reservation
 from ..models.rentalproperty import RentalProperty
 from ..serializers.reservation import ReservationCreateSerializer, ReservationUpdateSerializer
 from django.core import serializers
+from datetime import datetime
 
 
 class CreateReservationView(CreateAPIView):
@@ -43,8 +44,13 @@ class CreateReservationView(CreateAPIView):
         if overlapping_reservations:
             return Response({'error': 'This property is not available during this time'}, status=status.HTTP_403_FORBIDDEN)
 
+
         user = get_object_or_404(CustomUser, user=self.request.user)
-        serializer.save(user=user, property=rental_property, status="Pending")
+        start_date_obj = datetime.strptime(start_date, "%Y-%m-%d").date()
+        end_date_obj = datetime.strptime(end_date, "%Y-%m-%d").date()
+        days = (end_date_obj - start_date_obj).days
+        total_cost = rental_property.price * days
+        serializer.save(user=user, property=rental_property, status="Pending", total_cost=total_cost)
 
         reservation = serializer.instance
 
