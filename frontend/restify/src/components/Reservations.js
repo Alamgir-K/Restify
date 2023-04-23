@@ -75,6 +75,7 @@ const Reservations = () => {
     guests,
     link1,
     link2,
+    total_cost,
     }) => {
         return (
             <div className="listings">
@@ -88,10 +89,11 @@ const Reservations = () => {
                     <h3>{title}</h3>
                     <p>
                         Duration: {start_date} - {end_date} / Guests: {guests}
-                    </p>
+                    </p> 
                     <div className="price">
                         <p> Status: {status}</p>
-                        <h4>${price} / night</h4>
+                        <h4>${price} / Night</h4>
+                        <h4>Total: ${total_cost}</h4>
                         {status === "Pending" && (
                             <button
                             className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
@@ -140,6 +142,7 @@ const Reservations = () => {
                   price={reservation.property.price}
                   link1={`/comment/${reservation.id}/create/`}
                   link2={`/property/${reservation.property.id}/view/`}
+                  total_cost={reservation.total_cost}
                 />
               ))
             ) : (
