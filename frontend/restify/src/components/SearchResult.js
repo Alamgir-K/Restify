@@ -184,7 +184,7 @@ const SearchResult = () => {
                 <button
                 class="mx-1 px-3 my-9 rounded border bg-[#fbf8f0]"
                 onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage * 5 >= count}
+                disabled={currentPage * 4 >= count}
                 >
                 Next
                 </button>
