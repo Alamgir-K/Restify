@@ -60,7 +60,7 @@ const NavBar = () => {
               </Link>
             </div>
             <div class="mx-2 sm:mx-4">
-              <a href="host_home.html">
+              <a href="/host-home">
                 <img
                   class="h-7 w-7 overflow-hidden rounded-full"
                   src="/images/price-tag-svgrepo-com.svg"
