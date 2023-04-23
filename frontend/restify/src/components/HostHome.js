@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../css/style.css';
-// import 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css';
-// import { fetchHostProperties, fetchHostInbox } from "../api";
 import NavBar from './navbar';
 import AuthContext from '../AuthContext';
 import { useContext } from 'react';
@@ -17,6 +15,45 @@ const HostHome = () => {
   const [inboxCurrentPage, setInboxCurrentPage] = useState(1);
   const [maxPages, setMaxPages] = useState(0);
   const [inboxMaxPages, setInboxMaxPages] = useState(0);
+  const [showRatingsPopup, setShowRatingsPopup] = useState(false);
+  const [popupUserId, setPopupUserId] = useState(null);
+  const [userRatings, setUserRatings] = useState([]);
+
+  const fetchUserRatings = async (user_id) => {
+    try {
+      const headers = { Authorization: `Bearer ${token}` };
+      const response = await axios.get(`http://localhost:8000/api/rating/${user_id}/view/`, {
+        headers,
+      });
+      setUserRatings(response.data.results);
+      console.log(response.data);
+    } catch (err) {
+      console.error("Error during fetching user ratings", err.data);
+    }
+  };
+
+  const handleSeeRatings = (user_id) => {
+    setPopupUserId(user_id);
+    fetchUserRatings(user_id);
+    setShowRatingsPopup(true);
+  };
+
+  const displayStars = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <span
+          key={i}
+          role="img"
+          aria-label="star"
+          className={i <= rating ? "star-orange" : ""}
+        >
+          {i <= rating ? "⭐" : "☆"}
+        </span>
+      );
+    }
+    return stars;
+  };
 
   useEffect(() => {
 
@@ -61,6 +98,7 @@ useEffect(() => {
       });
 
       getHostInbox();
+      console.log(hostProperties);
       window.location.reload();
   }
 
@@ -76,6 +114,7 @@ useEffect(() => {
         },
       });
       setHostProperties(response.data.results);
+      // console.log(hostProperties[0].main_image);
       setMaxPages(response.data.count);
     } catch (err) {
       console.error("Error during get property", err.data);
@@ -161,7 +200,13 @@ useEffect(() => {
                       <tbody>
                         <tr>
                           <td className="border px-4 py-3">{inboxItem.property}</td>
-                          <td className="border px-4 py-3">{inboxItem.message}</td>
+                          <td className="border px-4 py-3">{inboxItem.message}                              <button
+                                className="ml-2 bg-purple-500 px-2 py-1 text-white rounded-full"
+                                onClick={() => handleSeeRatings(inboxItem.user_id)}
+                              >
+                                See Ratings
+                              </button>
+                          </td>
                           <td className="border px-4 py-3">{inboxItem.guest}</td>
                           <td className="border px-4 py-3">
                             {inboxItem.dates}{' '}
@@ -219,6 +264,41 @@ useEffect(() => {
             </div>
         </div>
         </div>
+        {showRatingsPopup && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white w-full max-w-lg mx-auto rounded shadow-lg p-5">
+            <h2 className="text-2xl font-medium mb-4">Ratings</h2>
+            <table className="w-full text-left table-auto">
+            <thead>
+              <tr>
+                <th className="px-3 py-2">Host</th>
+                <th className="px-3 py-2">Rating</th>
+              </tr>
+            </thead>
+            <tbody>
+              {userRatings.map((rating) => (
+                <tr key={rating.id}>
+                  <td className="px-3 py-2 border">{rating.host}</td>
+                  <td className="px-3 py-2 border">
+                    {displayStars(rating.rating)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+            <button
+              className="bg-red-500 px-3 py-2 text-white rounded-full mt-4"
+              onClick={() => setShowRatingsPopup(false)}
+            >
+              Close
+            </button>
+          </div>
+          <div
+            className="fixed inset-0 bg-black opacity-50"
+            onClick={() => setShowRatingsPopup(false)}
+          ></div>
+        </div>
+      )}
     </>
   );
 };
