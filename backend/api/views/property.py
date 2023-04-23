@@ -21,7 +21,7 @@ from rest_framework.parsers import JSONParser
 class PropertyCreateView(CreateAPIView):
     serializer_class = PropertyCreateSerializer
     permission_classes = [IsAuthenticated]
-    parser_class = api_settings.DEFAULT_PARSER_SETTINGS + [MultiPartParser, FormParser, JSONParser]
+    parser_class = api_settings.DEFAULT_PARSER_CLASSES + [MultiPartParser, FormParser, JSONParser]
 
     def post(self, request):
         serializer = PropertyCreateSerializer(data = request.data)
@@ -69,7 +69,7 @@ class PropertyDeleteView(DestroyAPIView):
 class PropertyEditView(UpdateAPIView):
     serializer_class = PropertyEditSerializer
     permission_classes = [IsAuthenticated]
-    parser_classes = api_settings.DEFAULT_PARSER_SETTINGS + [MultiPartParser, FormParser, JSONParser]
+    parser_classes = api_settings.DEFAULT_PARSER_CLASSES + [MultiPartParser, FormParser, JSONParser]
 
     def get_object(self):
         property_id = self.kwargs.get('pk')

@@ -11,6 +11,7 @@ function EditProperty() {
 
   const [amenities, setAmenities] = useState([]);
   const [currentAmenity, setCurrentAmenity] = useState("");
+  const [mainImage, setMainImage] = useState(null);
   const [imageList, setImageList] = useState([]);
   const [title, setTitle] = useState('');
   const [isListed, setIsListed] = useState(true);
@@ -48,7 +49,6 @@ function EditProperty() {
     if (currentAmenity.trim() !== "") {
       setAmenities([...amenities, currentAmenity]);
       setCurrentAmenity("");
-      console.log("Amenities: ", amenities);
     }
   }
 
@@ -83,6 +83,9 @@ function EditProperty() {
   const removeImage = (index) => {
     setImageList((prevImageList) => prevImageList.filter((_, i) => i !== index));
   };
+  const removeMainImage = () => {
+    setMainImage(null);
+  };
 
   const setPropertyFormValues = (property) => {
     console.log(property);
@@ -93,35 +96,28 @@ function EditProperty() {
     setWashrooms(property.baths);
     setDescription(property.description);
     setPrice(property.price);
-    const propertyImages = [property.main_image];
+    const propertyImages = [];
 
     for (let i = 1; i <= 4; i++) {
       const imageKey = `img${i}`;
       if (property[imageKey]) {
-        propertyImages.push(property[imageKey]);
+        propertyImages.push('http://localhost:8000' + property[imageKey]);
       }
     }
   
     setImageList(propertyImages);
+    setMainImage('http://localhost:8000' + property.main_image);
     setAmenities(property.amenities);
   };
 
-  // const handleAvatarChange = (e) => {
-  //   if (e.target.files && e.target.files[0]) {
-  //     setAvatar(URL.createObjectURL(e.target.files[0]));
-  //   }
-  // };
-  
-  // Update the getPropertyDetails function
   const getPropertyDetails = async () => {
     try {
-      const headers = { Authorization: `Bearer ${token}` };
+      const headers =  {Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data"}
       const response = await axios.get(`http://localhost:8000/api/property/${id}/view`, {
         headers,
       });
       setPropertyDetails(response.data);
       setPropertyFormValues(response.data);
-      console.log("Amenities 2.0: ", amenities);
     } catch (err) {
       console.error("Error during get details", err);
     }
@@ -131,41 +127,83 @@ function EditProperty() {
     getPropertyDetails();
   }, [token]);
 
-const handleFileChange = (e) => {
-  const file = e.target.files[0];
-  const reader = new FileReader();
-
-  reader.onload = () => {
-    const newUrl = reader.result;
-    setImageList([...imageList, URL.createObjectURL(newUrl)]);
+  const handleMainImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setMainImage(URL.createObjectURL(e.target.files[0]));
+    }
   };
 
-  if (file) {
-    reader.readAsDataURL(file);
-  }
-};
+  const handleFileChange = (e, index) => {
+    if (e.target.files && e.target.files[0]) {
+      const newImageList = [...imageList];
+      newImageList[index] = URL.createObjectURL(e.target.files[0]);
+      setImageList(newImageList);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    console.log(imageList);
-  
-    const headers = { Authorization: `Bearer ${token}` };
   
     try {
-      const response = await axios.put(`http://localhost:8000/api/property/${id}/edit/`, {
-        name: title,
-        address: address,
-        city: 'Toronto',
-        country: 'Canada',
-        price: price,
-        max_guests: guestsAllowed,
-        beds: beds,
-        baths: washrooms,
-        description: description,
-        main_image: imageList[0],
-        amenities: amenities
-      }, { headers });
+      const formData = new FormData();
+      formData.append("name", title);
+      formData.append("address", address);
+      formData.append("city", 'Toronto');
+      formData.append("country", 'Canada');
+      formData.append("price", price);
+      formData.append("max_guests", guestsAllowed);
+      formData.append("beds", beds);
+      formData.append("baths", washrooms);
+      formData.append("description", description);
+
+      console.log("amenities: ", amenities);
+
+      amenities.forEach((item, index) => {
+        formData.append('amenities', item);
+      });
+
+      const fileInput1 = document.getElementById("fileInput1");
+  
+      if (fileInput1.files[0]) {
+        formData.append("main_image", fileInput1.files[0]);
+      }
+
+      const fileInput2 = document.getElementById("fileInput2");
+  
+      if (fileInput2.files[0]) {
+        formData.append("img1", fileInput2.files[0]);
+      }
+
+      const fileInput3 = document.getElementById("fileInput3");
+  
+      if (fileInput3.files[0]) {
+        formData.append("img2", fileInput3.files[0]);
+      }
+
+      const fileInput4 = document.getElementById("fileInput4");
+  
+      if (fileInput4.files[0]) {
+        formData.append("img3", fileInput4.files[0]);
+      }
+
+      const fileInput5 = document.getElementById("fileInput5");
+  
+      if (fileInput5.files[0]) {
+        formData.append("img4", fileInput5.files[0]);
+      }
+  
+      const response = await axios.put(
+        `http://localhost:8000/api/property/${id}/edit/`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(response);
+      window.location.reload();
     } catch (error) {
       console.error(error);
     }
@@ -181,7 +219,7 @@ const handleFileChange = (e) => {
         <div className="bg-beige h-screen">
         {propertyDetails ? (
         <div className="container mx-auto">
-          <h1 className="font-semibold mb-6 text-3xl text-left">New Property</h1>
+          <h1 className="font-semibold mb-6 text-3xl text-left">Edit Property</h1>
           <form className="bg-white shadow-md rounded px-6 pt-8" onSubmit={handleSubmit} encType="multipart/form-data">
           <div className="flex">
             <div className="mb-4 text-left w-2/5">
@@ -236,7 +274,10 @@ const handleFileChange = (e) => {
                       <p>{amenity}</p>
                       <button
                         className="text-red-500 hover:text-red-800 text-xl ml-2"
-                        onClick={() => removeAmenity(index)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          removeAmenity(index);
+                        }}
                       >
                         ×
                       </button>
@@ -246,25 +287,131 @@ const handleFileChange = (e) => {
             </div>
           </div>
           <div className="flex flex-wrap">
-            {/* Step 3: Display each image in a row using map */}
-            {imageList.map((url, index) => (
-              <div key={index} className="relative w-64 h-64 mr-4 mb-4">
-                <img src={'http://localhost:8000' + url} alt={`House Image ${index}`} />
+            <div className="relative w-48 h-64 mr-4 mb-4">
+              <img
+                src={mainImage ? mainImage : "https://via.placeholder.com/400x300"}
+                alt="House Image 1"
+              />
                 <button
                   className="absolute top-0 right-0 text-red-500 hover:text-red-800 text-2xl p-2"
-                  onClick={() => removeImage(index)}
+                  onClick={() => removeMainImage()}
                 >
                   ×
                 </button>
-              </div>
-            ))}
-          <div className="relative w-64 h-64 mr-4 mb-4">
-              <img src="https://via.placeholder.com/400x300" alt="Add new House Image" />
-            <label htmlFor="fileInput" className="absolute bottom-0 left-0 text-green-500 hover:text-green-800 text-3xl p-2 cursor-pointer">
-              +
-            </label>
-            <input type="file" id="fileInput" className="hidden" onChange={handleFileChange} />
-          </div>
+                  <label
+                    htmlFor="fileInput1"
+                    className="absolute bottom-0 left-0 text-green-500 hover:text-green-800 text-3xl p-2 cursor-pointer"
+                  >
+                    +
+                  </label>
+                  <input
+                    type="file"
+                    id="fileInput1"
+                    name="fileInput1"
+                    className="hidden"
+                    onChange={(e) => handleMainImageChange(e)}
+                  />
+            </div>
+            <div className="relative w-48 h-64 mr-4 mb-4">
+              <img
+                src={imageList[0] ? imageList[0] : "https://via.placeholder.com/400x300"}
+                alt="House Image 2"
+              />
+                <button
+                  className="absolute top-0 right-0 text-red-500 hover:text-red-800 text-2xl p-2"
+                  onClick={() => removeImage(0)}
+                >
+                  ×
+                </button>
+                  <label
+                    htmlFor="fileInput2"
+                    className="absolute bottom-0 left-0 text-green-500 hover:text-green-800 text-3xl p-2 cursor-pointer"
+                  >
+                    +
+                  </label>
+                  <input
+                    type="file"
+                    id="fileInput2"
+                    name="fileInput2"
+                    className="hidden"
+                    onChange={(e) => handleFileChange(e, 0)}
+                  />
+            </div>
+            <div className="relative w-48 h-64 mr-4 mb-4">
+              <img
+                src={imageList[1] ? imageList[1] : "https://via.placeholder.com/400x300"}
+                alt="House Image 3"
+              />
+                <button
+                  className="absolute top-0 right-0 text-red-500 hover:text-red-800 text-2xl p-2"
+                  onClick={() => removeImage(1)}
+                >
+                  ×
+                </button>
+                  <label
+                    htmlFor="fileInput3"
+                    className="absolute bottom-0 left-0 text-green-500 hover:text-green-800 text-3xl p-2 cursor-pointer"
+                  >
+                    +
+                  </label>
+                  <input
+                    type="file"
+                    id="fileInput3"
+                    name="fileInput3"
+                    className="hidden"
+                    onChange={(e) => handleFileChange(e, 1)}
+                  />
+            </div>
+            <div className="relative w-48 h-64 mr-4 mb-4">
+              <img
+                src={imageList[2] ? imageList[2] : "https://via.placeholder.com/400x300"}
+                alt="House Image 4"
+              />
+                <button
+                  className="absolute top-0 right-0 text-red-500 hover:text-red-800 text-2xl p-2"
+                  onClick={() => removeImage(2)}
+                >
+                  ×
+                </button>
+                  <label
+                    htmlFor="fileInput4"
+                    className="absolute bottom-0 left-0 text-green-500 hover:text-green-800 text-3xl p-2 cursor-pointer"
+                  >
+                    +
+                  </label>
+                  <input
+                    type="file"
+                    id="fileInput4"
+                    name="fileInput4"
+                    className="hidden"
+                    onChange={(e) => handleFileChange(e, 2)}
+                  />
+            </div>
+            <div className="relative w-48 h-64 mr-4 mb-4">
+              <img
+                src={imageList[3] ? imageList[3] : "https://via.placeholder.com/400x300"}
+                alt="House Image 5"
+              />
+                <button
+                  className="absolute top-0 right-0 text-red-500 hover:text-red-800 text-2xl p-2"
+                  onClick={() => removeImage(3)}
+                >
+                  ×
+                </button>
+                  <label
+                    htmlFor="fileInput5"
+                    className="absolute bottom-0 left-0 text-green-500 hover:text-green-800 text-3xl p-2 cursor-pointer"
+                  >
+                    +
+                  </label>
+                  <input
+                    type="file"
+                    id="fileInput5"
+                    name="fileInput5"
+                    className="hidden"
+                    onChange={(e) => handleFileChange(e, 3)}
+                  />
+            </div>
           </div>
           <div className="flex">
             <div className="w-3/6 flex-col p-4">
