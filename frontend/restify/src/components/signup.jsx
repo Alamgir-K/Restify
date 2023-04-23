@@ -3,6 +3,7 @@ import axios from "axios";
 import AuthContext from "../AuthContext";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const { setAccessToken } = useContext(AuthContext);
@@ -15,6 +16,7 @@ const SignUp = () => {
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -36,6 +38,7 @@ const SignUp = () => {
       setAccessToken(response.data.access);
       setError("");
       console.log(response.data);
+      navigate("/");
     } catch (error) {
       console.error("Error during sign up:", error.response.data);
 
