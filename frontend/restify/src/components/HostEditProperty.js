@@ -495,7 +495,7 @@ function EditProperty() {
           </div>
             <div className="flex items-center justify-between">
               <button
-                className="text-white font-medium button-normal py-2 px-4 rounded"
+                className="text-blue-800 font-medium button-normal py-2 px-4 rounded"
                 type="submit"
               >
                 Save

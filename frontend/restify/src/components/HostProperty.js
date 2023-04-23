@@ -21,6 +21,25 @@ const HostProperty = () => {
     const [reservationPage, setReservationPage] = useState(1);
     const [maxCommentPages, setCommentMaxPages] = useState(0);
     const [maxReservationPages, setReservationMaxPages] = useState(0);
+    const [ratingVisible, setRatingVisible] = useState(null);
+    const [currentRating, setCurrentRating] = useState(0);
+    const [submittedRatingForComment, setSubmittedRatingForComment] = useState({});
+    const [showRatingsPopup, setShowRatingsPopup] = useState(false);
+    const [popupUserId, setPopupUserId] = useState(null);
+    const [userRatings, setUserRatings] = useState([]);
+
+    const fetchUserRatings = async (user_id) => {
+      try {
+        const headers = { Authorization: `Bearer ${token}` };
+        const response = await axios.get(`http://localhost:8000/api/rating/${user_id}/view/`, {
+          headers,
+        });
+        setUserRatings(response.data.results);
+        console.log(response.data);
+      } catch (err) {
+        console.error("Error during fetching user ratings", err.data);
+      }
+    };
 
     const propertyImages = [
       "main_image",
@@ -38,12 +57,70 @@ const HostProperty = () => {
 
     }, [token]);
 
+    const handleSeeRatings = (user_id) => {
+      setPopupUserId(user_id);
+      fetchUserRatings(user_id);
+      setShowRatingsPopup(true);
+    };
+    
+
     const toggleReply = (commentId) => {
         if (replyVisible === commentId) {
           setReplyVisible(null);
         } else {
           setReplyVisible(commentId);
         }
+    };
+
+    const toggleRating = (commentId) => {
+      if (ratingVisible === commentId) {
+        setRatingVisible(null);
+      } else {
+        setRatingVisible(commentId);
+      }
+    };
+
+    const renderStars = (commentId) => {
+      const stars = [];
+      for (let i = 1; i <= 5; i++) {
+        stars.push(
+          <span
+            key={i}
+            role="img"
+            aria-label="star"
+            className={i <= currentRating ? "star-orange" : ""}
+            onClick={() => setCurrentRating(i)}
+          >
+            {i <= currentRating ? "⭐" : "☆"}
+          </span>
+        );
+      }
+      return stars;
+    };
+    
+    const submitRating = async (commentId, userId) => {
+      console.log(currentRating);
+      try {
+        const headers = { Authorization: `Bearer ${token}` };
+        const data = {
+          rating: currentRating,
+        };
+        const response = await axios.post(
+          `http://localhost:8000/api/rating/${userId}/create/`,
+          data,
+          { headers }
+        );
+        console.log(response.data);
+
+        setSubmittedRatingForComment({
+          ...submittedRatingForComment,
+          [commentId]: true,
+        });
+
+      } catch (err) {
+        console.error("Error during rating submission", err);
+      }
+
     };
 
     const renderImages = () => {
@@ -64,6 +141,24 @@ const HostProperty = () => {
           );
         });
       };
+
+      const displayStars = (rating) => {
+        const stars = [];
+        for (let i = 1; i <= 5; i++) {
+          stars.push(
+            <span
+              key={i}
+              role="img"
+              aria-label="star"
+              className={i <= rating ? "star-orange" : ""}
+            >
+              {i <= rating ? "⭐" : "☆"}
+            </span>
+          );
+        }
+        return stars;
+      };
+      
 
     const submitReply = async (commentId) => {
         try {
@@ -112,7 +207,7 @@ const HostProperty = () => {
           });
     
           getPropertyRequests();
-        //   window.location.reload();
+          window.location.reload();
       }
 
     const getPropertyComments = async () => {
@@ -126,6 +221,15 @@ const HostProperty = () => {
             });
             setPropertyComments(response.data.results);
             console.log(response.data);
+
+            // Initialize submittedRatingForComment as false for each fetched comment
+            const initialSubmittedRatings = response.data.results.reduce((acc, comment) => {
+              acc[comment.id] = false;
+              return acc;
+            }, {});
+
+            setSubmittedRatingForComment(initialSubmittedRatings);
+
           } catch (err) {
             console.error("Error during get comments", err.data);
           }
@@ -152,7 +256,7 @@ const HostProperty = () => {
     return (
         <div className="bg-beige h-screen">
           <NavBar />
-          <div className="flex flex-col w-full p-6 container mx-auto">
+          <div className="flex flex-col w-full p-6 bg-white container mx-auto">
             {propertyDetails ? (
               <div className="flex flex-col mb-4">
                 <div className="flex justify-between items-center">
@@ -218,10 +322,10 @@ const HostProperty = () => {
                 )
                 }
 
-                <div class="flex bg-white container">
+          <div class="flex bg-lime-100 container">
 
-            <div className="flex flex-col mb-6 w-1/2 p-4">
-                <h2 className="text-2xl font-medium mb-4">Upcoming Bookings</h2>
+            <div className="flex flex-col w-1/2 p-4">
+                <h2 className="text-2xl font-medium mb-4">Bookings</h2>
                 <table className="w-full text-left table-auto">
                     <thead>
                     <tr>
@@ -232,10 +336,18 @@ const HostProperty = () => {
                     </thead>
                     <tbody>
                     {propertyRequests
-                    .filter((request) => ['Pending', 'Approved', 'Terminated', 'Cancelled'].includes(request.status))
+                    .filter((request) => ['Pending', 'Approved', 'Terminated', 'Cancelled', 'Completed'].includes(request.status))
                     .map((request) => (
                         <tr key={request.id} className={request.status === 'Approved' ? "bg-blue-200" : ""}>
-                            <td className="px-3 py-2 border">{request.user_id}</td>
+                            <td className="px-3 py-2 border">
+                              {request.user_id}
+                              <button
+                                className="ml-2 bg-purple-500 px-2 py-1 text-white rounded-full"
+                                onClick={() => handleSeeRatings(request.user_id)}
+                              >
+                                See Ratings
+                              </button>
+                            </td>
                             <td className="px-3 py-2 border">{request.guest}</td>
                             <td className="px-3 py-2 border">
                                 {request.start_date} - {request.end_date}{"  -  "}
@@ -256,7 +368,11 @@ const HostProperty = () => {
                                     <div className="bg-black text-white text-center px-2 py-3 rounded">
                                         {request.status}
                                     </div>
-                                ) : null}
+                                ) : request.status === 'Completed' ? (
+                                  <div className="bg-lime-600 text-white text-center px-2 py-3 rounded">
+                                      {request.status}
+                                  </div>
+                                ) :null}
                             </td>
                         </tr>
                     ))}
@@ -282,7 +398,7 @@ const HostProperty = () => {
 
             </div>
 
-            <div className="flex flex-col w-1/2 relative pb-20 p-10">
+            <div className="flex flex-col w-3/5 relative pb-20 p-10">
                 <h2 className="text-2xl font-medium mb-4">Previous Guest Comments</h2>
                 {propertyComments.map((comment) => (
                     <div key={comment.id}>
@@ -339,6 +455,23 @@ const HostProperty = () => {
                                     </button>
                                 </div>
                             )}
+                            {!submittedRatingForComment[comment.id] && (
+                            <button
+                            className="button-normal text-white rounded-full py-2 px-4"
+                            onClick={() => toggleRating(comment.id)}
+                          >
+                            Rate User
+                          </button>)}
+                          {ratingVisible === comment.id && !submittedRatingForComment[comment.id] && (
+                            <div className="mt-2">
+                              {renderStars(comment.id)}
+                              <button
+                                onClick={() => submitRating(comment.id, comment.user)}
+                              >
+                                Submit Rating
+                              </button>
+                            </div>
+                          )}
                         </div>
                     </div>
                 ))}
@@ -358,9 +491,44 @@ const HostProperty = () => {
                     Next
                   </button>
                 </div>
+            </div>
+        </div> 
+      </div>
+      {showRatingsPopup && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white w-full max-w-lg mx-auto rounded shadow-lg p-5">
+            <h2 className="text-2xl font-medium mb-4">Ratings</h2>
+            <table className="w-full text-left table-auto">
+            <thead>
+              <tr>
+                <th className="px-3 py-2">Host</th>
+                <th className="px-3 py-2">Rating</th>
+              </tr>
+            </thead>
+            <tbody>
+              {userRatings.map((rating) => (
+                <tr key={rating.id}>
+                  <td className="px-3 py-2 border">{rating.host}</td>
+                  <td className="px-3 py-2 border">
+                    {displayStars(rating.rating)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+            <button
+              className="bg-red-500 px-3 py-2 text-white rounded-full mt-4"
+              onClick={() => setShowRatingsPopup(false)}
+            >
+              Close
+            </button>
           </div>
-      </div> 
-    </div>
+          <div
+            className="fixed inset-0 bg-black opacity-50"
+            onClick={() => setShowRatingsPopup(false)}
+          ></div>
+        </div>
+      )}
     </div>
   );
 };
