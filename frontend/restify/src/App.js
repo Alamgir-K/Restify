@@ -12,12 +12,16 @@ import Notifications from './components/notifications';
 import HomePage from './components/HomePage';
 import SearchResult from './components/SearchResult';
 import Reservations from './components/Reservations';
+import PropertyView from './components/PropertyView';
+import CommentCreate from './components/CommentCreate';
 
 function App() {
   return (
     <Router>
       <div className="App">
         <Routes>
+          <Route path="/comment/:reservationId/create" element={<CommentCreate />} />
+          <Route path="/property/:id/view" element={<PropertyView />} />
           <Route path="/reservations" element={<Reservations />} />
           <Route path="/search" element={<SearchResult />} />
           <Route path="/" element={<HomePage />} />

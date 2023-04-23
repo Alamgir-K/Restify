@@ -10,7 +10,8 @@ from django.contrib.auth.password_validation import validate_password
 #         fields = '__all__'
 
 class PropertyCreateSerializer(serializers.ModelSerializer):
-    owner_username = serializers.ReadOnlyField(source='owner.user.username')
+    owner_username = serializers.ReadOnlyField(source='owner.user.firstname')
+    owner_id = serializers.ReadOnlyField(source='owner.id')
 
     # images = PropertyImageSerializer(many=True, required=False, read_only = True)
     # uploaded_images = serializers.ListField(
@@ -24,7 +25,7 @@ class PropertyCreateSerializer(serializers.ModelSerializer):
         # serializers works just like django forms
         model = RentalProperty
 
-        fields = ['id', 'owner_username', 'name', 'address', 'city', 'country', 'price', 'max_guests', 'beds', 'baths', 'main_image', 'img1', 'img2', 'img3', 'img4', 'description', 'amenities']
+        fields = ['id', 'owner_username', 'owner_id', 'name', 'address', 'city', 'country', 'price', 'max_guests', 'beds', 'baths', 'main_image', 'img1', 'img2', 'img3', 'img4', 'description', 'amenities']
 
 
     def validate_amenities(self, value):
@@ -43,7 +44,8 @@ class PropertyCreateSerializer(serializers.ModelSerializer):
         return property
 
 class PropertyEditSerializer(serializers.ModelSerializer):
-    owner_username = serializers.ReadOnlyField(source='owner.user.username')
+    owner_username = serializers.ReadOnlyField(source='owner.user.firstname')
+    owner_id = serializers.ReadOnlyField(source='owner.id')
 
     # images = PropertyImageSerializer(many=True, required=False, read_only = True)
     # uploaded_images = serializers.ListField(
@@ -62,8 +64,8 @@ class PropertyEditSerializer(serializers.ModelSerializer):
         # serializers works just like django forms
         model = RentalProperty
 
-        fields = ['id', 'owner_username', 'name', 'address', 'city', 'country', 'price', 'max_guests', 'beds', 'baths', 'main_image', 'img1', 'img2', 'img3', 'img4', 'description', 'amenities']
-        read_only_fields = ['id', 'owner_username', 'city', 'country']
+        fields = ['id', 'owner_username', 'owner_id', 'name', 'address', 'city', 'country', 'price', 'max_guests', 'beds', 'baths', 'main_image', 'img1', 'img2', 'img3', 'img4', 'description', 'amenities']
+        read_only_fields = ['id', 'owner_username', 'owner_id', 'city', 'country']
 
 
     def update(self, instance, validated_data):

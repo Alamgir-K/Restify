@@ -11,7 +11,7 @@ class Reservation(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
-    message = models.TextField(default=None)
+    message = models.TextField(default=None, blank=True, null=True)
     guest = models.IntegerField()
     PENDING = 'P'
     DENIED = 'D'

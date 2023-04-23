@@ -655,6 +655,25 @@ button[type="past"]{
     margin-bottom: 40px;
 }
 
+.create-comment-container {
+    background-image: url('./img2.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+  
+.create-comment-form {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 2rem;
+    border-radius: 0.5rem;
+    width: 40%;
+    min-width: 400px;
+}
+
 
 
   
