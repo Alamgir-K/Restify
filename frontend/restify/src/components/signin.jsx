@@ -40,7 +40,7 @@ const Login = () => {
         <div className="container mx-auto p-4">
           <nav className="flex justify-center items-center">
             <div>
-              <a href="navbar.html">
+              <a href="/">
                 <p className="text-xl md:text-3xl font-bold">Restify</p>
               </a>
             </div>

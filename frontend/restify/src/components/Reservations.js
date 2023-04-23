@@ -73,12 +73,13 @@ const Reservations = () => {
     start_date,
     end_date,
     guests,
-    link,
+    link1,
+    link2,
     }) => {
         return (
             <div className="listings">
                 <div className="pics">
-                    <a href={link}>
+                    <a href={link2}>
                         <img src={imageUrl} alt="Property" />
                     </a>
                 </div>
@@ -102,7 +103,7 @@ const Reservations = () => {
                         {["Terminated", "Completed"].includes(status) && (
                             <button
                             className="bg-[#f1996f] hover:bg-[#bb6e4b] text-white font-bold py-2 px-4 rounded"
-                            onClick={() => (window.location.href = link)}
+                            onClick={() => (window.location.href = link1)}
                             >
                             Review Property
                             </button>
@@ -130,14 +131,15 @@ const Reservations = () => {
                   id={reservation.id}
                   key={reservation.id}
                   imageUrl={`http://localhost:8000${reservation.property.main_image}`}
-                  address={reservation.property.city + ", " + reservation.property.country}
+                  address={reservation.property.address + ", " + reservation.property.city + ", " + reservation.property.country}
                   title={reservation.property.name}
                   status={reservation.status}
                   start_date={reservation.start_date}
                   end_date={reservation.end_date}
                   guests={reservation.guest}
                   price={reservation.property.price}
-                  link={`/property/${reservation.property.id}/view/`}
+                  link1={`/comment/${reservation.id}/create/`}
+                  link2={`/property/${reservation.property.id}/view/`}
                 />
               ))
             ) : (
