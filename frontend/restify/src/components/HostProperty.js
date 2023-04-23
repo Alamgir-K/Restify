@@ -27,6 +27,7 @@ const HostProperty = () => {
     const [showRatingsPopup, setShowRatingsPopup] = useState(false);
     const [popupUserId, setPopupUserId] = useState(null);
     const [userRatings, setUserRatings] = useState([]);
+    const [commentText, setCommentText] = useState('');
 
     const fetchUserRatings = async (user_id) => {
       try {
@@ -104,6 +105,7 @@ const HostProperty = () => {
         const headers = { Authorization: `Bearer ${token}` };
         const data = {
           rating: currentRating,
+          comment: commentText
         };
         const response = await axios.post(
           `http://localhost:8000/api/rating/${userId}/create/`,
@@ -465,6 +467,7 @@ const HostProperty = () => {
                           {ratingVisible === comment.id && !submittedRatingForComment[comment.id] && (
                             <div className="mt-2">
                               {renderStars(comment.id)}
+                              <input type="text" value={commentText} onChange={(e) => setCommentText(e.target.value)} className="border border-gray-400 px-3 py-2 rounded" placeholder="Write your comment here" />
                               <button
                                 onClick={() => submitRating(comment.id, comment.user)}
                               >
