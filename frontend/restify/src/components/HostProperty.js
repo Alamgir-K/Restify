@@ -28,6 +28,7 @@ const HostProperty = () => {
     const [popupUserId, setPopupUserId] = useState(null);
     const [userRatings, setUserRatings] = useState([]);
     const [commentText, setCommentText] = useState('');
+    const [userIdTitleMap, setUserIdTitleMap] = useState({});
 
     const fetchUserRatings = async (user_id) => {
       try {
@@ -177,6 +178,25 @@ const HostProperty = () => {
         }
     };
 
+    const getUserName = async (userId) => {
+      try {
+        const headers = { Authorization: `Bearer ${token}` };
+
+        const profileResponse = await axios.get(
+          `http://localhost:8000/api/profile/${userId}/`,
+          { headers }
+        );
+
+        setUserIdTitleMap((prevMapping) => ({
+          ...prevMapping,
+          [userId]: profileResponse.data.user.first_name,
+        }));
+
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
 
     const getPropertyRequests = async () => {
         try {
@@ -190,6 +210,11 @@ const HostProperty = () => {
             });
             setPropertyRequests(response.data.results);
             console.log(response.data);
+
+            response.data.results.forEach((user) => {
+              getUserName(user.id);
+            });
+
           } catch (err) {
             console.error("Error during get Reservations", err.data);
           }
@@ -232,6 +257,10 @@ const HostProperty = () => {
 
             setSubmittedRatingForComment(initialSubmittedRatings);
 
+            response.data.results.forEach((user) => {
+              getUserName(user.id);
+            });
+
           } catch (err) {
             console.error("Error during get comments", err.data);
           }
@@ -245,6 +274,7 @@ const HostProperty = () => {
             });
             console.log(response.data);
             setPropertyDetails(response.data);
+            getUserName(response.data.owner_id);
           } catch (err) {
             console.error("Error during get details", err.data);
           }
@@ -342,7 +372,7 @@ const HostProperty = () => {
                     .map((request) => (
                         <tr key={request.id} className={request.status === 'Approved' ? "bg-blue-200" : ""}>
                             <td className="px-3 py-2 border">
-                              {request.user_id}
+                              {userIdTitleMap[request.user_id]}
                               <button
                                 className="ml-2 bg-purple-500 px-2 py-1 text-white rounded-full"
                                 onClick={() => handleSeeRatings(request.user_id)}
@@ -420,7 +450,7 @@ const HostProperty = () => {
                             </span>
                         ))}
                             <p className="font-medium ml-4 mb-2 flex items-center">
-                                <p className="font-medium  mr-2">{comment.user}: </p>
+                                <p className="font-medium  mr-2">{userIdTitleMap[comment.user]}: </p>
                                 {comment.comment}{" "}
                                 {!comment.hostresponse ? (
                                     <button className="button-normal text-white rounded-full py-2 px-4" onClick={() => toggleReply(comment.id)}>
@@ -430,13 +460,13 @@ const HostProperty = () => {
                             </p>
                             {comment.hostresponse && (
                                 <div className="ml-4 mb-2 text-green-600 flex items-center">
-                                    <p className="font-medium mr-2">Host response:</p>
+                                    <p className="font-medium mr-2">{userIdTitleMap[propertyDetails.owner_id]}:</p>
                                     <p>{comment.hostresponse}</p>
                                 </div>
                             )}
                             {comment.userresponse && (
                                 <div className="ml-4 mb-2 text-blue-600 flex items-center">
-                                    <p className="font-medium mr-2">{comment.user}:</p>
+                                    <p className="font-medium mr-2">{userIdTitleMap[comment.user]}:</p>
                                     <p>{comment.userresponse}</p>
                                 </div>
                             )}
