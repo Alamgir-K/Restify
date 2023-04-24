@@ -21,6 +21,8 @@ function NewProperty() {
   const [washrooms, setWashrooms] = useState(1);
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState(0);
+  const [city, setCity] = useState('');
+  const [country, setCountry] = useState('');
   const { token } = useContext(AuthContext);
 
   function handleTitleChange(e) {
@@ -66,6 +68,14 @@ function NewProperty() {
 
   function handleWashroomsChange(e) {
     setWashrooms(e.target.value);
+  }
+
+  function handleCountryChange(e) {
+    setCountry(e.target.value);
+  }
+
+  function handleCityChange(e) {
+    setCity(e.target.value);
   }
 
   function handleDescriptionChange(e) {
@@ -116,6 +126,8 @@ const handleFileChange = (e, index) => {
       formData.append("beds", beds);
       formData.append("baths", washrooms);
       formData.append("description", description);
+      formData.append("city", city);
+      formData.append("country", country);
 
       console.log("amenities: ", amenities);
 
@@ -428,6 +440,26 @@ const handleFileChange = (e, index) => {
                 <option value="8">8+</option>
               </select>
             </div>
+          </div>
+          <div className="flex">
+          <div className="w-3/6 flex-col p-4">
+              <label className="block text-gray-700 font-medium mb-2 text-left">City</label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                type="text"
+                value={city}
+                onChange={handleCityChange}
+              />
+            </div>
+            <div className="w-3/6 flex-col p-4">
+              <label className="block text-gray-700 font-medium mb-2 text-left">Country</label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+                type="text"
+                value={country}
+                onChange={handleCountryChange}
+              />
+            </div>
             <div className="w-1/4 flex-col p-4">
               <label className="block text-gray-700 font-medium mb-2 text-left">Washrooms</label>
               <select
@@ -455,7 +487,7 @@ const handleFileChange = (e, index) => {
           </div>
             <div className="flex items-center justify-between">
               <button
-                className="text-white font-medium button-normal py-2 px-4 rounded"
+                className="text-blue-800 font-medium button-normal py-2 px-4 rounded"
                 type="submit"
               >
                 Save

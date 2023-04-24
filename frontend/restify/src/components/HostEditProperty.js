@@ -21,6 +21,8 @@ function EditProperty() {
   const [washrooms, setWashrooms] = useState(1);
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState(0);
+  const [city, setCity] = useState('');
+  const [country, setCountry] = useState('');
   const { token } = useContext(AuthContext);
 
   function handleTitleChange(e) {
@@ -52,6 +54,14 @@ function EditProperty() {
     }
   }
 
+  function handleCountryChange(e) {
+    setCountry(e.target.value);
+  }
+
+  function handleCityChange(e) {
+    setCity(e.target.value);
+  }
+
   function handleListedChange(e) {
     setIsListed(e.target.checked);
   }
@@ -80,10 +90,13 @@ function EditProperty() {
     setAddress(e.target.value);
   }
 
-  const removeImage = (index) => {
+  const removeImage = (e, index) => {
+    e.preventDefault();
     setImageList((prevImageList) => prevImageList.filter((_, i) => i !== index));
   };
-  const removeMainImage = () => {
+
+  const removeMainImage = (e) => {
+    e.preventDefault();
     setMainImage(null);
   };
 
@@ -96,6 +109,8 @@ function EditProperty() {
     setWashrooms(property.baths);
     setDescription(property.description);
     setPrice(property.price);
+    setCity(property.city);
+    setCountry(property.country);
     const propertyImages = [];
 
     for (let i = 1; i <= 4; i++) {
@@ -148,8 +163,8 @@ function EditProperty() {
       const formData = new FormData();
       formData.append("name", title);
       formData.append("address", address);
-      formData.append("city", 'Toronto');
-      formData.append("country", 'Canada');
+      formData.append("city", city);
+      formData.append("country", country);
       formData.append("price", price);
       formData.append("max_guests", guestsAllowed);
       formData.append("beds", beds);
@@ -294,7 +309,7 @@ function EditProperty() {
               />
                 <button
                   className="absolute top-0 right-0 text-red-500 hover:text-red-800 text-2xl p-2"
-                  onClick={() => removeMainImage()}
+                  onClick={(e) => removeMainImage(e)}
                 >
                   ×
                 </button>
@@ -319,7 +334,7 @@ function EditProperty() {
               />
                 <button
                   className="absolute top-0 right-0 text-red-500 hover:text-red-800 text-2xl p-2"
-                  onClick={() => removeImage(0)}
+                  onClick={(e) => removeImage(e, 0)}
                 >
                   ×
                 </button>
@@ -344,7 +359,7 @@ function EditProperty() {
               />
                 <button
                   className="absolute top-0 right-0 text-red-500 hover:text-red-800 text-2xl p-2"
-                  onClick={() => removeImage(1)}
+                  onClick={(e) => removeImage(e, 1)}
                 >
                   ×
                 </button>
@@ -369,7 +384,7 @@ function EditProperty() {
               />
                 <button
                   className="absolute top-0 right-0 text-red-500 hover:text-red-800 text-2xl p-2"
-                  onClick={() => removeImage(2)}
+                  onClick={(e) => removeImage(e, 2)}
                 >
                   ×
                 </button>
@@ -394,7 +409,7 @@ function EditProperty() {
               />
                 <button
                   className="absolute top-0 right-0 text-red-500 hover:text-red-800 text-2xl p-2"
-                  onClick={() => removeImage(3)}
+                  onClick={(e) => removeImage(e, 3)}
                 >
                   ×
                 </button>

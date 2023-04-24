@@ -18,6 +18,7 @@ const HostHome = () => {
   const [showRatingsPopup, setShowRatingsPopup] = useState(false);
   const [popupUserId, setPopupUserId] = useState(null);
   const [userRatings, setUserRatings] = useState([]);
+  const [propertyIdTitleMap, setPropertyIdTitleMap] = useState({});
 
   const fetchUserRatings = async (user_id) => {
     try {
@@ -103,7 +104,6 @@ useEffect(() => {
   }
 
   const getHostProperties = async () => {
-    // const response = await fetchHostProperties(hostId);
     try {
       const headers = { Authorization: `Bearer ${token}` };
       const response = await axios.get(`http://localhost:8000/api/property/search/`, {
@@ -114,12 +114,31 @@ useEffect(() => {
         },
       });
       setHostProperties(response.data.results);
-      // console.log(hostProperties[0].main_image);
       setMaxPages(response.data.count);
     } catch (err) {
       console.error("Error during get property", err.data);
     }
   };
+
+
+  const getPropertyName = async (propertyId) => {
+    try {
+      const headers = { Authorization: `Bearer ${token}` };
+      const response = await axios.get(`http://localhost:8000/api/property/${propertyId}/view`, {
+        headers,
+      });
+      console.log("worked");
+      console.log(response.data.name);
+      setPropertyIdTitleMap((prevMapping) => ({
+        ...prevMapping,
+        [propertyId]: response.data.name,
+      }));
+    } catch (err) {
+      console.log("Error during get details", err.data);
+      return("welp");
+    }
+  };
+  
 
   const getHostInbox = async () => {
     try {
@@ -132,6 +151,13 @@ useEffect(() => {
       });
       setHostInbox(response.data.results);
       setInboxMaxPages(response.data.count);
+      // Create a mapping from property ids to titles
+
+      // call getPropertyName for each property id
+      response.data.results.forEach((reservation) => {
+        getPropertyName(reservation.property);
+      });
+
     } catch (err) {
       console.error("Error during get inbox", err.data);
     }
@@ -199,7 +225,7 @@ useEffect(() => {
                       </thead>
                       <tbody>
                         <tr>
-                          <td className="border px-4 py-3">{inboxItem.property}</td>
+                          <td className="border px-4 py-3">{propertyIdTitleMap[inboxItem.property]}</td>
                           <td className="border px-4 py-3">{inboxItem.message}                              <button
                                 className="ml-2 bg-purple-500 px-2 py-1 text-white rounded-full"
                                 onClick={() => handleSeeRatings(inboxItem.user_id)}
@@ -209,7 +235,7 @@ useEffect(() => {
                           </td>
                           <td className="border px-4 py-3">{inboxItem.guest}</td>
                           <td className="border px-4 py-3">
-                            {inboxItem.dates}{' '}
+                          {inboxItem.start_date} - {inboxItem.end_date}
                             <button className="bg-blue-500 rounded-full py-2 px-3 text-white" onClick={() => updateReservationStatus('Approved', inboxItem.id)}>Approve</button>{' '}
                             <button className="bg-red-500 rounded-full py-2 px-3 text-white" onClick={() => updateReservationStatus('Denied', inboxItem.id)}>Deny</button>
                             </td>
@@ -231,12 +257,51 @@ useEffect(() => {
                         </thead>
                         <tbody>
                         <tr>
-                            <td className="border px-4 py-3">{inboxItem.property}</td>
-                            <td className="border px-4 py-3">{inboxItem.message}</td>
+                            <td className="border px-4 py-3">{propertyIdTitleMap[inboxItem.property]}</td>
+                            <td className="border px-4 py-3">{inboxItem.message}                              <button
+                                className="ml-2 bg-purple-500 px-2 py-1 text-white rounded-full"
+                                onClick={() => handleSeeRatings(inboxItem.user_id)}
+                              >
+                                See Ratings
+                              </button>
+                          </td>
+                            <td className="border px-4 py-3">{inboxItem.guest}</td>
+                            <td className="border px-4 py-3">
+                            {inboxItem.start_date} - {inboxItem.end_date}
+                            <button className="bg-gray-500 rounded-full py-2 px-3 text-white" onClick={() => updateReservationStatus('Terminated', inboxItem.id)}>Terminate</button>{' '}
+                            </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+                {inboxItem.status === 'Denied' || inboxItem.status === 'Cancelled' || inboxItem.status === 'Terminated' && (
+                    <div className="p-4 bg-gray-300 rounded-lg mt-4">
+                    <table className="w-full text-left table-auto">
+                        <thead>
+                        <tr>
+                            <th className="px-4 py-3">Property</th>
+                            <th className="px-4 py-3">Stay Request</th>
+                            <th className="px-4 py-3">Guests</th>
+                            <th className="px-4 py-3">Dates</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td className="border px-4 py-3">{propertyIdTitleMap[inboxItem.property]}</td>
+                            <td className="border px-4 py-3">{inboxItem.message}                              <button
+                                className="ml-2 bg-purple-500 px-2 py-1 text-white rounded-full"
+                                onClick={() => handleSeeRatings(inboxItem.user_id)}
+                              >
+                                See Ratings
+                              </button>
+                          </td>
                             <td className="border px-4 py-3">{inboxItem.guest}</td>
                             <td className="border px-4 py-3">
                             {inboxItem.dates}{' '}
-                            <button className="bg-gray-500 rounded-full py-2 px-3 text-white" onClick={() => updateReservationStatus('Terminated', inboxItem.id)}>Terminate</button>{' '}
+                            <div className="bg-black text-white text-center px-2 py-3 rounded">
+                              {inboxItem.status}
+                            </div>
                             </td>
                         </tr>
                       </tbody>
