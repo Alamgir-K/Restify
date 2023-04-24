@@ -334,6 +334,9 @@ const HostProperty = () => {
                   <p>{propertyDetails.description}</p>
                 </div>
                 <div className="property-details-fields flex flex-wrap justify-between mt-4">
+                <div className="word rounded-lg button-normal">
+                {propertyDetails.city}, {propertyDetails.country}
+                  </div>
                   <div className="word rounded-lg button-normal">
                     {propertyDetails.address}
                   </div>
